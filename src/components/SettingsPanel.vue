@@ -12,8 +12,23 @@
         <span class="info">
           Arrêt actuel :
           <strong>{{ stop ? stop.name : 'Information Indisponible' }}</strong>
-          {{ stop ? '('+stop.city+')' : '' }}
+          {{ stop ? '(' + stop.city + ')' : '' }}
         </span>
+      </div>
+      <div class="option">
+        <div class="info">
+          Lien de l'écran
+          <span class="info link-status" v-if="copied"> Le lien a été copié !</span>
+        </div>
+
+        <textarea
+          class="info copyable-link"
+          style="width: 100%; font-size: 1em; resize: none"
+          rows="4"
+          readonly
+          @click="copy(currentUrl)"
+          >{{ currentUrl }}</textarea
+        >
       </div>
     </div>
     <h3 class="title">Paramètres</h3>
@@ -22,7 +37,14 @@
         <label for="invert-columns">Informations trafic à gauche</label>
         <input name="invert-columns" type="checkbox" v-model="screenOptions.invertedColumns" />
       </div>
-
+      <div class="option-checkbox">
+        <label for="mode">Mode d'affichage</label>
+        <select name="mode" v-model="screenOptions.mode">
+          <option value="AUTO">Automatique</option>
+          <option value="DESTINATIONS">Destinations</option>
+          <option value="TIMES">Horaires</option>
+        </select>
+      </div>
       <div class="option">
         <label for="selected-branch">Branches à afficher</label>
         <select name="selected-branch" v-model="screenOptions.branches" multiple="true">
@@ -37,13 +59,15 @@
 <script setup lang="ts">
 import type { Line, Stop } from '@/types'
 import type { ScreenSettings } from './SielTramway.vue'
-
+import { useClipboard } from '@vueuse/core'
+const currentUrl = window.location.href
 interface Props {
   line: Line | null
   stop: Stop | null
   screenOptions: ScreenSettings
   branchesAvailable: string[]
 }
+const { copy, isSupported, copied } = useClipboard()
 
 const props = defineProps<Props>()
 </script>
@@ -54,41 +78,54 @@ const props = defineProps<Props>()
   flex-direction: column;
   padding: 2cqh;
   gap: 1cqh;
-  padding-bottom: 4cqh;
+  padding-bottom: 3%;
   width: fit-content;
 }
 .title {
-  font-size: 3cqh;
-  margin-bottom: 1cqh;
+  font-size: 2em;
+  margin-bottom: 0.5em;
 }
 .settings-options {
   display: flex;
   flex-direction: column;
-  gap: 2cqh;
+  gap: 1em;
 }
 .option:last-child {
-  margin-bottom: 2cqh;
+  margin-bottom: 0.5em;
 }
 .option {
   display: flex;
   flex-direction: column;
-  gap: 1cqh;
+  gap: 0.5em;
 }
 .option-checkbox {
   display: flex;
   align-items: center;
-  gap: 2cqh;
+  gap: 1em;
 }
 input[type='checkbox'] {
-  width: 2.5cqh;
-  height: 2.5cqh;
+  width: 1.3em;
+  height: 1.3em;
   accent-color: v-bind('line?.color');
 }
 .label,
-label {
-  font-size: 2.5cqh;
-}
+label,
 .info {
-  font-size: 2.2cqh;
+  font-size: 1.3em;
+}
+
+.copyable-link {
+  font-family: 'GFontRegular', sans-serif;
+  cursor: pointer;
+  height: auto;
+}
+.link-status {
+  font-family: 'GFontBold', sans-serif;
+  margin-left: 1cqh;
+  font-size: 0.8em;
+  padding: 0.1em 0.4em;
+  background-color: rgb(15, 187, 15);
+  color: white;
+  border-radius: 5px;
 }
 </style>
