@@ -55,7 +55,7 @@ defineProps<Props>()
   z-index: 10;
   height: 2%;
   width: calc(60% - var(--offset) * 2);
-  background-color: #4d565f;
+  background-color: #798692a4;
   border-radius: 999px;
 }
 :deep(sup) {
