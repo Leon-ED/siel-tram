@@ -10,7 +10,7 @@
         <NoDataAvailable v-else />
       </article>
     </section>
-    <section class="traffic-info-section"></section>
+    <DisruptionsPanel class="traffic-info-section" />
   </main>
 </template>
 <script lang="ts" setup>
@@ -18,9 +18,10 @@ import type { Departure, Line } from '@/types'
 import Header from './Header.vue'
 import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
-import NameViewMode from './NameViewMode.vue'
+import NameViewMode from './DestinationViewMode.vue'
 import NoDataAvailable from './NoDataAvailable.vue'
 import { cleanStopName } from '@/utils'
+import DisruptionsPanel from './DisruptionsPanel.vue'
 export interface ScreenSettings {
   areColumnsInverted: boolean,
   selectedBranches: string[],
@@ -87,7 +88,6 @@ const viewMode = computed<VIEW_MODE>(() => {
   width: 100%;
   box-sizing: border-box;
   background-color: white;
-  border-radius: 2cqh;
 }
 .screen.inverted-column {
   .departures-section {
