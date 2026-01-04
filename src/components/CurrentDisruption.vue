@@ -10,7 +10,7 @@
     <div class="content-container">
       <LineLogo :line="disruption.line" class="line-logo" class-name="absolute-logo" :size="disruption.line.id === 'LEONGP_FAKE_ID' ?'25cqh' : '18cqh'" />
       <img
-        class="disruption-icon"
+        class="disruption-icon blink"
         :src="DisruptionService.getIconForImpact(disruption.impact)"
         alt="Icône de perturbation"
         v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
