@@ -5,16 +5,33 @@
       <Clock class="clock" />
     </div>
     <div class="active-disruption-message">
-      <div class="message">
-        Attentifs, ensemble •
-        <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>
-      </div>
+      <div class="message" :class="messageLengthClass" v-html="currentMessage"></div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
 import Clock from './Clock.vue'
 import CurrentDisruption from './CurrentDisruption.vue'
+import { getStringRealLength } from '@/utils'
+const currentMessage =
+'Attentifs, ensemble • <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>'
+const messageLengthClass = computed(() => {
+  const length = getStringRealLength(currentMessage)
+  if (length > 430) {
+    return 'too-long-message'
+  }
+  if (length > 270) {
+    return 'very-very-long-message'
+  }
+  if (length > 200) {
+    return 'very-long-message'
+  }
+  if (length > 120) {
+    return 'long-message'
+  }
+  return ''
+})
 </script>
 <style scoped lang="css">
 .disruptions-panel {
@@ -47,14 +64,31 @@ import CurrentDisruption from './CurrentDisruption.vue'
   justify-content: center;
   align-items: center;
 }
-strong {
-  font-family: 'IDFMMedium', sans-serif;
+:deep(strong) {
+  font-family: 'IDFMMedium', sans-serif !important;
   font-weight: normal;
+}
+.active-disruption-message {
+  font-size: 11.5cqh;
+  letter-spacing: 1;
+
 }
 .message {
   font-family: 'IDFMRegular', sans-serif;
   padding: 3.5cqh 4cqh;
-  font-size: 11.5cqh;
   color: #221f21;
+}
+
+.long-message {
+  font-size: 0.85em;
+}
+.very-long-message {
+  font-size: 0.75em;
+}
+.very-very-long-message {
+  font-size: 0.6em;
+}
+.too-long-message {
+  font-size: 0.45em;
 }
 </style>
