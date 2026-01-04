@@ -10,7 +10,7 @@
 import { LineService } from '@/services/lineService'
 import { StopService } from '@/services/stopService'
 import { type Stop, type Line, type Departure } from '@/types'
-import { getSingleValueFromQueryParam, queryParamToArray } from '@/utils'
+import { cleanAndStripId, getSingleValueFromQueryParam, queryParamToArray } from '@/utils'
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FitBox from '../components/FitBox.vue'
@@ -98,13 +98,13 @@ useIntervalFn(() => {
   })
 }, FETCH_DEPARTURES_INTERVAL_SECONDS * 1_000)
 
-LineService.getLine(lineId).then((fetchedLine) => {
+LineService.getLine(cleanAndStripId(lineId)).then((fetchedLine) => {
   line.value = fetchedLine
 })
-StopService.getStop(stopId).then((fetchedStop) => {
+StopService.getStop(cleanAndStripId(stopId)).then((fetchedStop) => {
   stop.value = fetchedStop
 })
-DepartureService.getDepartures(stopId, lineId, departures.value).then((fetchedDepartures) => {
+DepartureService.getDepartures(cleanAndStripId(stopId), cleanAndStripId(lineId), departures.value).then((fetchedDepartures) => {
   departures.value = fetchedDepartures
 })
 </script>
