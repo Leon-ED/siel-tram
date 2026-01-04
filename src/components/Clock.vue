@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="hours">{{ time.split(':')[0] }}</span>
-    <span class="divider">:</span>
+    <span class="divider blink">:</span>
     <span class="minutes">{{ time.split(':')[1] }}</span>
   </div>
 </template>
