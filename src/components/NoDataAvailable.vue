@@ -1,6 +1,6 @@
 <template>
   <div class="no-departures-available">
-    <h2 class="message">Temps d'attente indisponible</h2>
+    <h2 class="message">Temps d'attente indisponibles</h2>
   </div>
 </template>
 <style scoped lang="css">
