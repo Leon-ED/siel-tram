@@ -7,12 +7,14 @@ interface Props {
   height?: number | string | null;
   // Option 2 : Ratio direct (ex: 16/9 ou 1.77)
   ratio?: number | string | null;
+  position?: "TOP" | "CENTER" | "BOTTOM";
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: null,
   height: null,
   ratio: null,
+  position: "CENTER",
 });
 
 const wrapperRef = ref<HTMLElement | null>(null);
@@ -89,7 +91,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="wrapperRef" class="fit-wrapper">
+  <div ref="wrapperRef" class="fit-wrapper" :style="{ alignItems: props.position === 'TOP' ? 'flex-start' : props.position === 'BOTTOM' ? 'flex-end' : 'center' }">
     <div
       class="fit-content"
       :style="{ aspectRatio: targetRatio }"
@@ -110,7 +112,6 @@ onUnmounted(() => {
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   overflow: hidden;
   position: relative;
   container-type: size;

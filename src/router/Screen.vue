@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <FitBox :ratio="'32/9'">
+    <FitBox :ratio="'32/9'" :position="'TOP'">
       <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" />
     </FitBox>
   </div>
@@ -96,6 +96,6 @@ DepartureService.getDepartures(stopId, lineId, departures.value).then((fetchedDe
 </script>
 <style scoped lang="css">
 .content {
-  background-color: #836f6f;
+  background-color: #221f21;
 }
 </style>
