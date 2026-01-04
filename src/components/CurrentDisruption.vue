@@ -7,14 +7,27 @@
         fill="#c2cdda"
       />
     </svg>
+
     <div class="content-container">
-      <LineLogo :line="disruption.line" class="line-logo" class-name="absolute-logo" :size="disruption.line.id === 'LEONGP_FAKE_ID' ?'25cqh' : '18cqh'" />
-      <img
-        class="disruption-icon blink"
-        :src="DisruptionService.getIconForImpact(disruption.impact)"
-        alt="Icône de perturbation"
-        v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
-      />
+      <Transition name="icon-slide">
+        <div class="logo-wrapper" :key="disruption.id">
+          
+          <LineLogo 
+            :line="disruption.line" 
+            class="line-logo" 
+            class-name="absolute-logo" 
+            :size="disruption.line.id === 'LEONGP_FAKE_ID' ?'25cqh' : '18cqh'" 
+          />
+          
+          <img
+            class="disruption-icon blink"
+            :src="DisruptionService.getIconForImpact(disruption.impact)"
+            alt="Icône de perturbation"
+            v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
+          />
+
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -35,36 +48,72 @@ defineProps<Props>()
   height: 100%;
   width: fit-content;
   position: relative;
+  /* Pas d'overflow hidden ici sinon on coupe l'ombre portée ou le svg si besoin */
 }
+
 svg {
   position: absolute;
   height: 100%;
   z-index: 0;
+  top: 0;
+  left: 0;
 }
-.main-icon {
-  position: relative;
-  display: block;
-  z-index: 1;
-  padding-top: 1cqh;
-  height: 23.5cqh;
-}
+
 .content-container {
   position: relative;
   z-index: 2;
+  height: 100%;
+  width: 115%; /* S'assure de prendre la largeur définie par le parent/SVG */
+  /* CRUCIAL : Overflow hidden ici pour que l'icône qui sort ne dépasse pas du trapèze */
+  overflow: hidden; 
+}
+
+/* Nouveau wrapper pour gérer le flexbox de positionnement */
+.logo-wrapper {
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .line-logo {
   margin-top: -1.5cqh;
   margin-left: 2.5cqh;
+  /* S'assure que le logo ne se déforme pas pendant l'anim */
+  flex-shrink: 0; 
 }
+
 .disruption-icon {
   height: 11cqh;
   width: auto;
-  margin-left: -3cqh;
+  margin-left: -5cqh;
   margin-top: 9cqh;
+}
+
+/* === ANIMATION (Slide vers la gauche) === */
+
+.icon-slide-enter-active,
+.icon-slide-leave-active {
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+/* Pendant le départ, on le sort du flux pour que le nouveau prenne sa place exacte */
+.icon-slide-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Force la largeur pour garder le centrage flex */
+}
+
+/* Le nouveau arrive de la droite */
+.icon-slide-enter-from {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+/* L'ancien part à gauche */
+.icon-slide-leave-to {
+  transform: translateX(-120%);
 }
 </style>

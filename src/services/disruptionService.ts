@@ -13,7 +13,7 @@ export class DisruptionService {
   private static DISRUPTION_ENDPOINT = API_URL + 'disruptions/'
 
   public static getIconForImpact(impact: DisruptionImpact | undefined): string {
-    const BASE_ICON_PATH = '/src/assets/icons/disruptions/'
+    const BASE_ICON_PATH = 'public/disruptions/'
     switch (impact) {
       case 'SUSPENSION':
         return BASE_ICON_PATH + 'suspended.svg'

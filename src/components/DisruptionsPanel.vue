@@ -1,11 +1,31 @@
 <template>
-  <div class="disruptions-panel h-w-100">
+<div class="disruptions-panel h-w-100">
     <div class="disruptions-icons h-w-100">
-      <CurrentDisruption :disruption="activeDisruption" />
+      <CurrentDisruption :disruption="activeDisruption" class="active-disruption-icon" />
+      <TransitionGroup 
+        name="list" 
+        tag="div" 
+        class="upcoming-disruptions"
+      >
+        <UpcompingDisruption
+          class="upcoming-disruption"
+          v-for="disruption in upcomingDisruptions"
+          :key="disruption.id"
+          :disruption="disruption"
+        />
+      </TransitionGroup>
+
       <Clock class="clock" />
     </div>
     <div class="active-disruption-message">
-      <div class="message" :class="messageLengthClass" v-html="activeDisruption.description"></div>
+      <Transition name="slide-horizontal">
+        <div
+          class="message"
+          :class="messageLengthClass"
+          v-html="activeDisruption.description"
+          :key="activeDisruption.id"
+        />
+      </Transition>
     </div>
   </div>
 </template>
@@ -16,6 +36,7 @@ import CurrentDisruption from './CurrentDisruption.vue'
 import { getStringRealLength } from '@/utils'
 import { Mode, type Disruption, type Line } from '@/types'
 import { useIntervalFn } from '@vueuse/core'
+import UpcompingDisruption from './UpcompingDisruption.vue'
 interface Props {
   disruptions: Disruption[]
 }
@@ -37,7 +58,7 @@ const DEFAULT_DISRUPTION: Disruption = {
   line: DEFAULT_DISUPTION_LINE,
 }
 ;('')
-const DISRUPTION_SHOW_DURATION_SECONDS = 2
+const DISRUPTION_SHOW_DURATION_SECONDS = 15
 
 const activeIndex = ref(0)
 const activeDisruption = computed<Disruption>(() => {
@@ -55,7 +76,7 @@ const { pause, resume } = useIntervalFn(
     activeIndex.value = (activeIndex.value + 1) % props.disruptions.length
   },
   DISRUPTION_SHOW_DURATION_SECONDS * 1000,
-  { immediateCallback: false,immediate: true },
+  { immediateCallback: false, immediate: true },
 )
 watch(
   () => props.disruptions,
@@ -87,6 +108,12 @@ const messageLengthClass = computed(() => {
   }
   return ''
 })
+const upcomingDisruptions = computed(() => {
+  const list = props.disruptions || []
+  // on prend les prochaines 5 après l’active
+  return list.slice(activeIndex.value + 1, activeIndex.value + 6)
+})
+
 </script>
 <style scoped lang="css">
 .disruptions-panel {
@@ -101,6 +128,22 @@ const messageLengthClass = computed(() => {
   background-color: #c2cdda;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 21% 75%;
+}
+.upcoming-disruptions {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  gap: 2cqh;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 2cqh;
+}
+.upcoming-disruption {
+  aspect-ratio: 1;
+  height: 55%;
 }
 
 .clock {
@@ -131,6 +174,12 @@ const messageLengthClass = computed(() => {
   font-family: 'IDFMRegular', sans-serif;
   padding: 3.5cqh 4cqh;
   color: #221f21;
+  position: absolute; /* Il reste toujours en absolute, plus de saut */
+  top: 0;
+  left: 0;
+  width: 98%;
+  height: 98%;
+  box-sizing: border-box;
 }
 
 .long-message {
@@ -144,5 +193,63 @@ const messageLengthClass = computed(() => {
 }
 .too-long-message {
   font-size: 0.45em;
+}
+.active-disruption-icon{
+  z-index: 1;
+}
+
+.slide-horizontal-enter-active,
+.slide-horizontal-leave-active {
+  transition:
+    transform 1.2s ease,
+    opacity 1.2s ease;
+}
+
+.slide-horizontal-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-horizontal-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-horizontal-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-horizontal-leave-to {
+  transform: translateX(-90%);
+  opacity: 0;
+}
+.active-disruption-message {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease; 
+}
+
+.list-leave-active {
+  position: absolute;
+  top: 31.5%; 
+  background-color: red;
+  transform: translateX(-300px); 
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(150px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
 }
 </style>
