@@ -1,5 +1,5 @@
 <template>
-  <div class="icon">
+  <div class="icon-container">
     <svg viewBox="0 0 341 193" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 0H234.407C248.358 0 260.977 8.28527 266.523 21.0867L341 193H0V0Z" fill="white" />
       <path
@@ -7,17 +7,28 @@
         fill="#c2cdda"
       />
     </svg>
+    <img class="main-icon" src="/public/disruptions/info.svg" alt="Icône de perturbation" />
   </div>
 </template>
 
-<script lang="ts"></script>
+<script setup lang="ts"></script>
 
 <style scoped lang="css">
-.icon {
+.icon-container {
   height: 100%;
   width: fit-content;
+  position: relative;
 }
 svg {
+  position: absolute;
   height: 100%;
+  z-index: 0;
+}
+.main-icon {
+  position: relative;
+  display: block;
+  z-index: 1;
+  padding-top: 1cqh;
+  height: 23.5cqh;
 }
 </style>

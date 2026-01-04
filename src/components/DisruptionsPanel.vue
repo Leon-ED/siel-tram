@@ -1,15 +1,20 @@
 <template>
   <div class="disruptions-panel h-w-100">
     <div class="disruptions-icons h-w-100">
-        <CurrentDisruption />
+      <CurrentDisruption />
       <Clock class="clock" />
     </div>
-    <div class="active-disruption-messages"></div>
+    <div class="active-disruption-message">
+      <div class="message">
+        Attentifs, ensemble •
+        <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import Clock from './Clock.vue'
-import CurrentDisruption from './CurrentDisruption.vue';
+import CurrentDisruption from './CurrentDisruption.vue'
 </script>
 <style scoped lang="css">
 .disruptions-panel {
@@ -19,7 +24,7 @@ import CurrentDisruption from './CurrentDisruption.vue';
   border-radius: 2cqh;
 }
 .disruptions-icons {
-    overflow: hidden;
+  overflow: hidden;
   position: relative;
   background-color: #c2cdda;
   border-top-left-radius: inherit;
@@ -40,5 +45,14 @@ import CurrentDisruption from './CurrentDisruption.vue';
   border-bottom-left-radius: 2cqh;
   border-bottom-right-radius: 2cqh;
   font-size: 12cqh;
+}
+strong {
+  font-family: 'IDFMMedium', sans-serif;
+}
+.message {
+  font-family: 'IDFMRegular', sans-serif;
+  padding: 3.5cqh 4cqh;
+  font-size: 11.5cqh;
+  color: #221f21;
 }
 </style>
