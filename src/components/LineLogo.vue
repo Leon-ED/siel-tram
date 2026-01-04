@@ -40,6 +40,7 @@ const isLineSpecial = computed(() => {
     "TVM",
     "ROISSYBUS",
     "CHARONNE",
+    "TER",
     "AMIBUS",
     "MONTBUS",
     "RIVER",
@@ -97,6 +98,7 @@ const isLineSpecial = computed(() => {
     "C02404",
   ];
   return (
+    props.line.name.toUpperCase().startsWith("TER ") ||
     specialModes.includes(props.line.mode) ||
     specialNames.includes(
       props.line.name.toLocaleUpperCase().replace(/\s/g, "")
@@ -105,6 +107,10 @@ const isLineSpecial = computed(() => {
   );
 });
 const computeBackupImgLink = computed(() => {
+  if(props.line.name.toUpperCase().startsWith("TER ")) {
+    return "/lines/ter.svg";
+  }
+
   return "/lines/" + props.line.name.toLowerCase().replace(/\s/g, "_") + ".svg";
 });
 const computeNormalImgLink = computed(() => {
