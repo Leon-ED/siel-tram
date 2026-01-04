@@ -13,11 +13,11 @@
         <NoDataAvailable v-else />
       </article>
     </section>
-    <DisruptionsPanel class="traffic-info-section" />
+    <DisruptionsPanel class="traffic-info-section" :disruptions="disruptions" />
   </main>
 </template>
 <script lang="ts" setup>
-import type { Departure, Line } from '@/types'
+import type { Departure, Disruption, Line } from '@/types'
 import Header from './Header.vue'
 import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
@@ -34,6 +34,7 @@ export interface ScreenSettings {
 interface Props {
   line: Line
   departures: Departure[]
+  disruptions: Disruption[]
   options: ScreenSettings
 }
 const props = defineProps<Props>()

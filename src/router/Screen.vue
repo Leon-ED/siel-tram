@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <FitBox :ratio="'32/9'" :position="'TOP'">
-      <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" />
+      <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" :disruptions="disruptions" />
     </FitBox>
   </div>
   <SettingsPanel
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { LineService } from '@/services/lineService'
 import { StopService } from '@/services/stopService'
-import { type Stop, type Line, type Departure } from '@/types'
+import { type Stop, type Line, type Departure, type Disruption } from '@/types'
 import { cleanAndStripId, getSingleValueFromQueryParam, queryParamToArray } from '@/utils'
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -24,6 +24,7 @@ import SettingsPanel from '@/components/SettingsPanel.vue'
 import { DepartureService } from '@/services/departureService'
 import { useIntervalFn } from '@vueuse/core'
 import { LogService } from '@/services/logService'
+import { DisruptionService } from '@/services/disruptionService'
 
 const FETCH_DEPARTURES_INTERVAL_SECONDS = 30
 const FETCH_DISRUPTIONS_INTERVAL_SECONDS = 120
@@ -34,7 +35,8 @@ const router = useRouter()
 
 const lineId = getSingleValueFromQueryParam(route.query.line, 'string', 'null')
 const stopId = getSingleValueFromQueryParam(route.query.stop, 'string', 'null')
-const isEmbedded = getSingleValueFromQueryParam(route.query.embed, 'string', '') !== '' ? true : false
+const isEmbedded =
+  getSingleValueFromQueryParam(route.query.embed, 'string', '') !== '' ? true : false
 
 const line = ref<Line | null>(null)
 const stop = ref<Stop | null>(null)
@@ -97,11 +99,13 @@ LogService.logScreenSelection(
   Boolean(isEmbedded),
   route.query.source ? route.query.source.toString() : null,
 )
-/**
- * Gère le rafraîchissement des perturbations
- * TODO: à faire
- */
-useIntervalFn(() => {}, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
+const disruptions = ref<Disruption[]>([])
+useIntervalFn(() => {
+  if (!line.value) return
+  DisruptionService.getDisruptions([line.value]).then((_disruptions) => {
+    disruptions.value = _disruptions
+  })
+}, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
 /**
  * Gère le rafraîchissement des départs
  */
@@ -113,6 +117,12 @@ useIntervalFn(() => {
 
 LineService.getLine(cleanAndStripId(lineId)).then((fetchedLine) => {
   line.value = fetchedLine
+  if (!fetchedLine) {
+    return
+  }
+  DisruptionService.getDisruptions([fetchedLine]).then((_disruptions) => {
+    disruptions.value = _disruptions
+  })
 })
 StopService.getStop(cleanAndStripId(stopId)).then((fetchedStop) => {
   stop.value = fetchedStop

@@ -5,19 +5,75 @@
       <Clock class="clock" />
     </div>
     <div class="active-disruption-message">
-      <div class="message" :class="messageLengthClass" v-html="currentMessage"></div>
+      <div class="message" :class="messageLengthClass" v-html="activeDisruption.description"></div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Clock from './Clock.vue'
 import CurrentDisruption from './CurrentDisruption.vue'
 import { getStringRealLength } from '@/utils'
-const currentMessage =
-'Attentifs, ensemble • <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>'
+import { Mode, type Disruption, type Line } from '@/types'
+import { useIntervalFn } from '@vueuse/core'
+interface Props {
+  disruptions: Disruption[]
+}
+const props = defineProps<Props>()
+const DEFAULT_DISUPTION_LINE: Line = {
+  id: 'all',
+  name: 'Toutes les lignes',
+  color: '#000000',
+  textColor: '#FFFFFF',
+  mode: Mode.AUTRE,
+}
+const DEFAULT_DISRUPTION: Disruption = {
+  id: 'default',
+  title: 'Vigilence',
+  description:
+    'Attentifs, ensemble • <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>',
+  status: 'ACTIVE',
+  impact: 'INFO',
+  line: DEFAULT_DISUPTION_LINE,
+}
+;('')
+const DISRUPTION_SHOW_DURATION_SECONDS = 15
+
+const activeIndex = ref(0)
+const activeDisruption = computed<Disruption>(() => {
+  const disruptions = props.disruptions
+
+  if (!disruptions || disruptions.length === 0) {
+    return DEFAULT_DISRUPTION
+  }
+
+  return disruptions[activeIndex.value] ?? DEFAULT_DISRUPTION
+})
+const { pause, resume } = useIntervalFn(
+  () => {
+    if (!props.disruptions || props.disruptions.length <= 1) return
+
+    activeIndex.value = (activeIndex.value + 1) % props.disruptions.length
+  },
+  DISRUPTION_SHOW_DURATION_SECONDS * 1000,
+  { immediateCallback: false },
+)
+watch(
+  () => props.disruptions,
+  (newDisruptions) => {
+    activeIndex.value = 0
+
+    if (!newDisruptions || newDisruptions.length <= 1) {
+      pause()
+    } else {
+      resume()
+    }
+  },
+  { immediate: true },
+)
+
 const messageLengthClass = computed(() => {
-  const length = getStringRealLength(currentMessage)
+  const length = getStringRealLength(activeDisruption.value.description)
   if (length > 430) {
     return 'too-long-message'
   }
@@ -71,7 +127,6 @@ const messageLengthClass = computed(() => {
 .active-disruption-message {
   font-size: 11.5cqh;
   letter-spacing: 1;
-
 }
 .message {
   font-family: 'IDFMRegular', sans-serif;
