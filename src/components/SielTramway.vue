@@ -22,7 +22,7 @@ import Header from './Header.vue'
 import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
 import NoDataAvailable from './NoDataAvailable.vue'
-import { cleanStopName } from '@/utils'
+import { cleanStopName, normalizeStringForComparison } from '@/utils'
 import DisruptionsPanel from './DisruptionsPanel.vue'
 import DestinationViewMode from './DestinationViewMode.vue'
 export interface ScreenSettings {
@@ -63,17 +63,23 @@ const viewMode = computed<VIEW_MODE>(() => {
   const areAllSameBranchName = departuresBySettings.value.every(
     //@ts-ignore // On ignore car on sait que departures n'est pas vide ici
     (departure): boolean => {
-      const depBranchName = cleanStopName(departure.branchName).toLowerCase()
+      const depBranchName = normalizeStringForComparison(cleanStopName(departure.branchName))
       //@ts-ignore
-      const firstDepBranchName = cleanStopName(departuresBySettings.value[0].branchName).toLowerCase()
-
-      const destName = departure.destination.toLowerCase()
-      return (
-        (depBranchName.includes(firstDepBranchName) || firstDepBranchName.includes(depBranchName)) || destName.includes(firstDepBranchName) || firstDepBranchName.includes(destName)
+      const firstDepBranchName = normalizeStringForComparison(
+        //@ts-ignore
+        cleanStopName(departuresBySettings.value[0].branchName),
       )
-    }
+
+      const destName = normalizeStringForComparison(
+        cleanStopName(departure.destination),
+      )
+      return (
+        (depBranchName.includes(firstDepBranchName) ||
+          firstDepBranchName.includes(depBranchName)) &&
+        (destName.includes(firstDepBranchName) || firstDepBranchName.includes(destName))
+      )
+    },
   )
-  console.log({ areAllSameDestination, areAllSameBranchName, departuresBySettings: departuresBySettings.value })
   return areAllSameDestination && areAllSameBranchName ? 'TIMES' : 'DESTINATIONS'
 })
 </script>

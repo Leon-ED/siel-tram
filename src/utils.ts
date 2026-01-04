@@ -205,3 +205,27 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
     return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
   }
 
+  export const normalizeStringForComparison = (str: string): string => {
+    let text = str.replace(/\s*\(.*?\)\s*/g, ' ');
+
+    if (typeof text.normalize === 'function') {
+        text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    text = text.replace(/\b(gare d'|gare de|gare du|gare des|gare)\b/gi, '');
+    text = text.replace(/\b(rer|metro|tram|tramway)\b/gi, '');
+
+    text = text.toLowerCase();
+
+    text = text.replace(/[^a-z0-9]/g, '');
+
+    const toReplace: Record<string, string> = {
+        saint: 'st',
+        porte: 'pt',
+    };
+    for (const [search, replace] of Object.entries(toReplace)) {
+        text = text.replace(new RegExp(search, 'g'), replace);
+    }
+
+    return text;
+  }
+
