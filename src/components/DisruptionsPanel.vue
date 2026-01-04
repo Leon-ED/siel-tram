@@ -34,10 +34,8 @@ import CurrentDisruption from './CurrentDisruption.vue'
 .clock {
   font-family: 'IDFMMedium', sans-serif;
   position: absolute;
-
-  padding: 0 2%;
-  height: 70%;
   top: 0;
+  width: 35cqh;
   right: 3.5cqh;
   box-sizing: border-box;
   color: var(--ratp-yellow);
@@ -45,6 +43,9 @@ import CurrentDisruption from './CurrentDisruption.vue'
   border-bottom-left-radius: 2cqh;
   border-bottom-right-radius: 2cqh;
   font-size: 12cqh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 strong {
   font-family: 'IDFMMedium', sans-serif;

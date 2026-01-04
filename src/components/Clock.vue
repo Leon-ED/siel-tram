@@ -1,9 +1,28 @@
 <template>
   <div>
-    <span class="hours">16</span>
+    <span class="hours">{{ time.split(':')[0] }}</span>
     <span class="divider">:</span>
-    <span class="minutes">43</span>
+    <span class="minutes">{{ time.split(':')[1] }}</span>
   </div>
 </template>
-<script lang="ts"></script>
+<script setup lang="ts">
+import { onUnmounted, ref } from 'vue'
+const time = ref(
+  new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date()),
+)
+
+const timerId = setInterval(() => {
+  time.value = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Paris',
+  }).format(new Date())
+}, 1_000)
+onUnmounted(() => {
+  clearInterval(timerId)
+})
+</script>
 <style scoped lang="css"></style>
