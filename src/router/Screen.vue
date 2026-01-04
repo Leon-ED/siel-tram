@@ -127,10 +127,13 @@ watch(
   { deep: true },
 )
 
-if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
-  router.replace({ name: 'Error' })
+const FORBIDEN_VALUES = [null, 'null', undefined, 'undefined', '']
+if (FORBIDEN_VALUES.includes(lineId) || FORBIDEN_VALUES.includes(stopId) || !lineId || !stopId) {
+  console.error('Missing line or stop parameter, redirecting to error page')
+  window.location.href = '/error?error=mp'
   throw new Error('Missing line or stop parameter')
 }
+console.log('Screen initialized with lineId=', lineId, 'and stopId=', stopId)
 LogService.logScreenSelection(
   lineId,
   stopId,
