@@ -27,6 +27,7 @@ import DisruptionsPanel from './DisruptionsPanel.vue'
 import DestinationViewMode from './DestinationViewMode.vue'
 export interface ScreenSettings {
   invertedColumns: boolean
+  mode: 'DESTINATIONS' | 'TIMES' | 'AUTO'
   branches: string[]
 }
 
@@ -54,6 +55,10 @@ const viewMode = computed<VIEW_MODE>(() => {
   if (departuresBySettings.value.length === 0) {
     return 'NO_DATA'
   }
+  if (props.options.mode === 'DESTINATIONS' || props.options.mode === 'TIMES') {
+    return props.options.mode
+  }
+
   // Si tous les départs n'ont pas le même destination, on affiche NAMES
   const areAllSameDestination = departuresBySettings.value.every(
     //@ts-ignore // On ignore car on sait que departures n'est pas vide ici

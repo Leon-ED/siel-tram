@@ -116,7 +116,7 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
   }
   }
 
-  export const cleanStopName = (name: string): string => {
+  export const cleanStopName = (name: string, isHeader: boolean=true): string => {
     let cleaned = name.replace(/\(.*\)/g, "").trim();
 
     const hardRules = new Map<string, string>([
@@ -159,6 +159,7 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
       }
     });
 
+    if(isHeader){
     const toRemove = ["Gare de "];
     toRemove.forEach((str) => {
       if (dontTouch.includes(cleaned.toLowerCase())) {
@@ -166,6 +167,7 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
       }
       cleaned = cleaned.replace(str, "");
     });
+  }
 
     const replace = new Map<string, string>([
       [" - ", "–"],
