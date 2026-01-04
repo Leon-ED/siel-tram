@@ -59,7 +59,7 @@ export class DepartureService {
           .filter((dep: any) => 
           {
             const forbiddenFlags = ['TERMINATES_HERE', 'SERVICE_IS_CANCELLED']
-            return !dep.notices?.some((notice: any) => forbiddenFlags.includes(notice.flag))
+            return !dep.flags?.some((flag: any) => forbiddenFlags.includes(flag))
           })
           .map(DepartureService.apiDepartureToDeparture)
         })
