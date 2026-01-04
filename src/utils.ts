@@ -10,6 +10,10 @@ export const queryParamToArray = (
   return Array.isArray(param) ? param : [param as string];
 };
 
+export const getStringRealLength = (str: string): number => {
+  return str.replace(/<[^>]*>/g, '').length;
+}
+
 // STRING
 export function getSingleValueFromQueryParam(
   param: LocationQueryValue | LocationQueryValue[] | undefined,
@@ -165,6 +169,7 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
 
     const replace = new Map<string, string>([
       [" - ", "–"],
+      ["Porte ", "P<sup>te</sup> "],
       ["Villiers-sur-Marne – Le Plessis-Trévise", "Villiers-sur-Marne"],
       ["Villiers-sur-Marne - Le Plessis-Trévise", "Villiers-sur-Marne"],
       ["Dourdan la Forêt", "Dourdan–La Forêt"],

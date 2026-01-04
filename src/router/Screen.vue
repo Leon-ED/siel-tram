@@ -8,7 +8,7 @@
     <label for="invert-columns">Inverser l'ordre des colonnes</label>
     <input name="invert-columns" type="checkbox" v-model="screenOptions.areColumnsInverted" />
     <label for="selected-branch">Branche sélectionnée</label>
-    <select name="selected-branch" v-model="screenOptions.selectedBranches">
+    <select name="selected-branch" v-model="screenOptions.selectedBranches" multiple="true">
       <option v-for="branch in branchesAvailable" :key="branch" :value="branch">{{ branch }}</option>
     </select>
   </div>

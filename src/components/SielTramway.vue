@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import type { Departure, Line } from '@/types'
 import Header from './Header.vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
 import NameViewMode from './NameViewMode.vue'
 import NoDataAvailable from './NoDataAvailable.vue'

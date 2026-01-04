@@ -2,8 +2,7 @@
   <div class="header">
     <LineLogo :line="line" size="21cqh" class-name="logo" />
     <div class="directions">
-      <h1 class="direction" :class="directionLenghtClass" v-if="branchesNames.length > 0">
-        {{ branchesNames.join(' • ') }}
+      <h1 class="direction" :class="directionLenghtClass" v-if="branchesNames.length > 0" v-html="branchesNames.join(' • ')"
       </h1>
     </div>
   </div>
@@ -12,6 +11,7 @@
 import type { Line } from '@/types'
 import LineLogo from './LineLogo.vue'
 import { computed } from 'vue'
+import { getStringRealLength } from '@/utils'
 interface Props {
   line: Line
   branchesNames: string[]
@@ -19,13 +19,14 @@ interface Props {
 const props = defineProps<Props>()
 
 const directionLenghtClass = computed(() => {
-  if (props.branchesNames.join(' • ').length > 130) {
+  const length = getStringRealLength(props.branchesNames.join(' • '))
+  if (length > 130) {
     return 'why-is-this-soooo-long'
   }
-  if (props.branchesNames.join(' • ').length > 50) {
+  if (length > 50) {
     return 'very-long-direction'
   }
-  if (props.branchesNames.join(' • ').length > 20) {
+  if (length > 20) {
     return 'long-direction'
   }
 
@@ -47,6 +48,7 @@ const directionLenghtClass = computed(() => {
   gap: 4cqh;
 }
 .directions {
+  color: #221f21;
   flex: 1;
   overflow: hidden;
   align-self: center;
@@ -54,7 +56,7 @@ const directionLenghtClass = computed(() => {
 }
 
 .direction {
-  font-family: 'IDFMBold', sans-serif;
+  font-family: 'IDFMMedium', sans-serif;
   font-size: 15cqh;
   white-space: nowrap;
   overflow: hidden;
@@ -91,5 +93,9 @@ const directionLenghtClass = computed(() => {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   line-clamp: 5;
+}
+:deep(sup) {
+  vertical-align: 60%;
+  font-size: 0.5em;
 }
 </style>
