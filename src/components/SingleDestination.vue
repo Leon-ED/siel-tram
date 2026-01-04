@@ -1,7 +1,7 @@
 <template>
   <div class="departure-time h-w-100">
     <div class="destination-name">
-      <div v-html="departure.destination.replace(/-/g, '‑')"></div>
+      <div v-html="cleanStopName(departure.destination,false).replace(/-/g, '‑')"></div>
     </div>
     <div class="bar" v-if="departureOrder === 0"></div>
     <SingleTime

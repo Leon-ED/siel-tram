@@ -59,6 +59,10 @@ const screenOptions = reactive<ScreenSettings>({
     console.log(urlBranches)
     return Array.from(new Set([ ...urlBranches]))
   })(),
+  mode: getSingleValueFromQueryParam(route.query.mode, 'string', 'AUTO') as
+    | 'DESTINATIONS'
+    | 'TIMES'
+    | 'AUTO',
 })
 watch(
   screenOptions,
