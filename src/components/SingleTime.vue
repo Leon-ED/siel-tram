@@ -90,7 +90,7 @@ const showMinutes = computed<boolean>(() => {
   padding-right: 4cqh;
   height: 100%;
   display: grid;
-  grid-template-columns: 70% 30%;
+  grid-template-columns: 75% 25%;
   grid-template-rows: 100%;
   justify-items: center;
   align-items: baseline;
