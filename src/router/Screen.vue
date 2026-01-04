@@ -7,14 +7,18 @@
   <div class="settings-panel">
     <label for="invert-columns">Inverser l'ordre des colonnes</label>
     <input name="invert-columns" type="checkbox" v-model="screenOptions.areColumnsInverted" />
+    <label for="selected-branch">Branche sélectionnée</label>
+    <select name="selected-branch" v-model="screenOptions.selectedBranches">
+      <option v-for="branch in branchesAvailable" :key="branch" :value="branch">{{ branch }}</option>
+    </select>
   </div>
 </template>
 <script lang="ts" setup>
 import { LineService } from '@/services/lineService'
 import { StopService } from '@/services/stopService'
 import { type Stop, type Line, type Departure } from '@/types'
-import { getSingleValueFromQueryParam } from '@/utils'
-import { reactive, ref } from 'vue'
+import { getSingleValueFromQueryParam, queryParamToArray } from '@/utils'
+import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FitBox from '../components/FitBox.vue'
 import SielTramway, { type ScreenSettings } from '@/components/SielTramway.vue'
@@ -45,10 +49,23 @@ setTimeout(
   },
   APP_FORCE_RELOAD_DELAY_HOURS * 60 * 60 * 1_000,
 )
+const DEFAULT_BRANCHES = ['Aller', 'Retour']
+const branchesAvailable = computed<string[]>(() => {
+  const dests = departures.value.map((dep) => dep.branchId).filter((name) => name.trim() !== "")
+  return Array.from(new Set([...DEFAULT_BRANCHES, ...dests])).sort()
+})
 
 const screenOptions = reactive<ScreenSettings>({
   areColumnsInverted: getSingleValueFromQueryParam(route.query.invertColumns, 'boolean', false),
+  selectedBranches: (() => {
+    const urlBranches = queryParamToArray(route.query.branches)
+    if (urlBranches.length === 0) {
+      return DEFAULT_BRANCHES
+    }
+    return Array.from(new Set([...DEFAULT_BRANCHES, ...urlBranches]))
+  })(),
 })
+
 if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
   router.replace({ name: 'Error' })
   throw new Error('Missing line or stop parameter')
@@ -57,8 +74,7 @@ if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
  * Gère le rafraîchissement des perturbations
  * TODO: à faire
  */
-useIntervalFn(() => {
-}, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
+useIntervalFn(() => {}, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
 /**
  * Gère le rafraîchissement des départs
  */

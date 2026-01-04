@@ -22,7 +22,7 @@ const directionLenghtClass = computed(() => {
   if (props.branchesNames.join(' • ').length > 130) {
     return 'why-is-this-soooo-long'
   }
-  if (props.branchesNames.join(' • ').length > 30) {
+  if (props.branchesNames.join(' • ').length > 50) {
     return 'very-long-direction'
   }
   if (props.branchesNames.join(' • ').length > 20) {
@@ -59,10 +59,17 @@ const directionLenghtClass = computed(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 .long-direction {
-  font-size: 10cqh;
-  white-space: normal; 
+  font-size: 11cqh;
+  white-space: normal;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -72,7 +79,7 @@ const directionLenghtClass = computed(() => {
 .very-long-direction {
   font-size: 7cqh;
   white-space: normal;
-   display: -webkit-box;
+  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -80,7 +87,7 @@ const directionLenghtClass = computed(() => {
 .why-is-this-soooo-long {
   font-size: 5cqh;
   white-space: normal;
-   display: -webkit-box;
+  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   line-clamp: 5;

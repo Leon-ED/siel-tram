@@ -1,6 +1,14 @@
 import type { LocationQueryValue } from 'vue-router'
 import  { Mode } from './types';
 
+// Fonction utilitaire pour normaliser les paramètres de requête en tableau
+export const queryParamToArray = (
+  param: unknown,
+  defaultValue: string[] = []
+): string[] => {
+  if (!param) return defaultValue;
+  return Array.isArray(param) ? param : [param as string];
+};
 
 // STRING
 export function getSingleValueFromQueryParam(
@@ -102,5 +110,92 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
     default:
       return defaultsTo
   }
+  }
 
-}
+  export const cleanStopName = (name: string): string => {
+    let cleaned = name.replace(/\(.*\)/g, "").trim();
+
+    const hardRules = new Map<string, string>([
+      ["Invalides", "Paris–Invalides"],
+      ["Aéroport CDG", "Aéroport Ch. de Gaulle"],
+      ["Aéroport Charles de Gaulle", "Aéroport Ch. de Gaulle"],
+      ["Aéroport Charles de Gaulle 2", "Aéroport Ch. de Gaulle"],
+    ]);
+
+    hardRules.forEach((value, key) => {
+      if (cleaned === key) {
+        cleaned = value;
+      }
+    });
+
+    const parisGares = new Map<string, string>([
+      ["Paris Gare du Nord", "Paris–Gare du Nord"],
+      ["Paris Lyon", "Paris–Gare de Lyon"],
+      ["Paris Gare de Lyon", "Paris–Gare de Lyon"],
+      ["Paris Austerlitz", "Paris–Austerlitz"],
+      ["Paris Est", "Paris–Gare de l'Est"],
+      ["Paris Saint-Lazare", "Paris–Saint-Lazare"],
+      ["Paris Montparnasse", "Paris–Montparnasse"],
+      ["Paris Bercy Bourgogne–Pays d'Auvergne", "Paris–Gare de Bercy"],
+    ]);
+    const dontTouch = [
+      "gare du nord",
+      "gare de lyon",
+      "gare de l'est",
+      "gare montparnasse",
+      "gare saint-lazare",
+      "gare de bercy",
+      "gare saint lazare",
+      "gare de l est",
+    ];
+
+    parisGares.forEach((value, key) => {
+      if (cleaned === key) {
+        cleaned = value;
+      }
+    });
+
+    const toRemove = ["Gare de "];
+    toRemove.forEach((str) => {
+      if (dontTouch.includes(cleaned.toLowerCase())) {
+        return;
+      }
+      cleaned = cleaned.replace(str, "");
+    });
+
+    const replace = new Map<string, string>([
+      [" - ", "–"],
+      ["Villiers-sur-Marne – Le Plessis-Trévise", "Villiers-sur-Marne"],
+      ["Villiers-sur-Marne - Le Plessis-Trévise", "Villiers-sur-Marne"],
+      ["Dourdan la Forêt", "Dourdan–La Forêt"],
+      ["Versailles Château Rive Gauche", "Versailles-Château-Rive-Gauche"],
+      ["Versailles Rive Droite", "Versailles–Rive-Droite"],
+      ["Saint-Nom-la-Bretèche–Forêt de Marly", "Saint-Nom-la-Bretèche"],
+      ["Saint-Nom-la-Bretèche - Forêt de Marly", "Saint-Nom-la-Bretèche"],
+      ["Marne-La-Vallée Chessy", "Marne-la-Vallée"],
+      ["Marne-la-Vallée Chessy", "Marne-la-Vallée"],
+      ["Marne-la-Vallée–Chessy", "Marne-la-Vallée"],
+      ["Marne-la-Vallée - Chessy", "Marne-la-Vallée"],
+      ["Marne-la-Vallée – Chessy", "Marne-la-Vallée"],
+      ["Cergy Le Haut", "Cergy–Le Haut"],
+      ["Cergy le Haut", "Cergy–Le Haut"],
+      ["Noisy-le-Grand - Mont d'Est", "Noisy-le-Grand"],
+      ["Lyon Part Dieu", "Lyon–Part-Dieu"],
+      ["Nanterre-La-Folie", "Nanterre–La Folie"],
+      [
+        "Saint-Quentin en Yvelines - Montigny-le-Bretonneux",
+        "Saint-Quentin-en-Yvelines",
+      ],
+      [
+        "Saint-Quentin en Yvelines–Montigny-le-Bretonneux",
+        "Saint-Quentin-en-Yvelines",
+      ],
+    ]);
+
+    replace.forEach((value, key) => {
+      cleaned = cleaned.replace(key, value);
+    });
+
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
+
