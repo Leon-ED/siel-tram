@@ -1,144 +1,186 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import BusLineLogo from "./BusLineLogo.vue";
-import NoctilienLogo from "./NoctilienLogo.vue";
-import { Mode, type Line } from "@/types";
-import { cleanId } from "@/utils";
+import { computed } from 'vue'
+import BusLineLogo from './BusLineLogo.vue'
+import NoctilienLogo from './NoctilienLogo.vue'
+import { Mode, type Line } from '@/types'
+import { cleanAndStripId, cleanId } from '@/utils'
 
 interface Props {
-  line: Line;
-  className: string;
-  size?: string;
-  fontSize?: string;
-  logoStyle?: string;
+  line: Line
+  className: string
+  size?: string
+  fontSize?: string
+  logoStyle?: string
 }
+const REPLACEMENT_LINES_IDS = [
+  'C01840',
+  'C01841',
+  'C02310',
+  'C01842',
+  'C02512',
+  'C01844',
+  'C02405',
+  'C02483',
+  'C02534',
+  'C02494',
+  'C02527',
+  'C02492',
+  'C02268',
+  'C02475',
+  'C02533',
+  'C02442',
+  'C02385',
+  'C02019',
+  'C02514',
+  'C02532',
+  'C02531',
+  'C02471',
+  'C01683',
+  'C02406',
+  'C02590',
+  'C02407',
+  'C02408',
+  'C02409',
+  'C02410',
+  'C02411',
+  'C02573',
+  'C02469',
+  'C02180',
+  'C01845',
+  'C01846',
+  'C01847',
+  'C01848',
+  'C01849',
+  'C01850',
+  'C01851',
+  'C01852',
+  'C01853',
+  'C02404',
+]
 
-const props = defineProps<Props>();
-const logoShape = computed(() => "none");
+const props = defineProps<Props>()
+const logoShape = computed(() => 'none')
 const style = computed(() => {
   return {
-    "--bg-color": props.line.color,
-    "--text-color": props.line.textColor,
-    "--size": props.size,
-  };
-});
+    '--bg-color': props.line.color,
+    '--text-color': props.line.textColor,
+    '--size': props.size,
+  }
+})
+
 const isLineSpecial = computed(() => {
-  const specialModes = [
-    Mode.TRAM,
-    Mode.RER,
-    Mode.METRO,
-    Mode.CABLE,
-    Mode.TRANSILIEN,
-  ];
+  const specialModes = [Mode.TRAM, Mode.RER, Mode.METRO, Mode.CABLE, Mode.TRANSILIEN]
   const specialNames = [
-    "AUDONIE",
-    "TUVIM",
-    "TILLBUS",
-    "ORLYBUS",
-    "FUN",
-    "ORLYVAL",
-    "TVM",
-    "ROISSYBUS",
-    "CHARONNE",
-    "TER",
-    "AMIBUS",
-    "MONTBUS",
-    "RIVER",
-    "PORT",
-    "EOLIEN",
-    "AS",
-    "LBLEUE",
-    "THIAIS",
-    "CHOISYBUS",
-    "BIEVRES",
-  ];
+    'AUDONIE',
+    'TUVIM',
+    'TILLBUS',
+    'ORLYBUS',
+    'FUN',
+    'ORLYVAL',
+    'TVM',
+    'ROISSYBUS',
+    'CHARONNE',
+    'TER',
+    'AMIBUS',
+    'MONTBUS',
+    'RIVER',
+    'PORT',
+    'EOLIEN',
+    'AS',
+    'LBLEUE',
+    'THIAIS',
+    'CHOISYBUS',
+    'BIEVRES',
+  ]
   const specialIds = [
-    "C01840",
-    "C01841",
-    "C02310",
-    "C01842",
-    "C02512",
-    "C01844",
-    "C02405",
-    "C02483",
-    "C02534",
-    "C02494",
-    "C02527",
-    "C02492",
-    "C02268",
-    "C02475",
-    "C02533",
-    "C02442",
-    "C02385",
-    "C02019",
-    "C02514",
-    "C02532",
-    "C02531",
-    "C02471",
-    "C01683",
-    "C02406",
-    "C02590",
-    "C02407",
-    "C02408",
-    "C02409",
-    "C02410",
-    "C02411",
-    "C02573",
-    "C02469",
-    "C02180",
-    "C01845",
-    "C01846",
-    "C01847",
-    "C01848",
-    "C01849",
-    "C01850",
-    "C01851",
-    "C01852",
-    "C01853",
-    "C02404",
-  ];
+    'C01840',
+    'C01841',
+    'C02310',
+    'C01842',
+    'C02512',
+    'C01844',
+    'C02405',
+    'C02483',
+    'C02534',
+    'C02494',
+    'C02527',
+    'C02492',
+    'C02268',
+    'C02475',
+    'C02533',
+    'C02442',
+    'C02385',
+    'C02019',
+    'C02514',
+    'C02532',
+    'C02531',
+    'C02471',
+    'C01683',
+    'C02406',
+    'C02590',
+    'C02407',
+    'C02408',
+    'C02409',
+    'C02410',
+    'C02411',
+    'C02573',
+    'C02469',
+    'C02180',
+    'C01845',
+    'C01846',
+    'C01847',
+    'C01848',
+    'C01849',
+    'C01850',
+    'C01851',
+    'C01852',
+    'C01853',
+    'C02404',
+  ]
   return (
-    props.line.name.toUpperCase().startsWith("TER ") ||
+    props.line.name.toUpperCase().startsWith('TER ') ||
     specialModes.includes(props.line.mode) ||
-    specialNames.includes(
-      props.line.name.toLocaleUpperCase().replace(/\s/g, "")
-    ) ||
+    specialNames.includes(props.line.name.toLocaleUpperCase().replace(/\s/g, '')) ||
     specialIds.includes(cleanId(props.line.id))
-  );
-});
+  )
+})
 const computeBackupImgLink = computed(() => {
-  if(props.line.name.toUpperCase().startsWith("TER ")) {
-    return "/lines/ter.svg";
+  if (props.line.name.toUpperCase().startsWith('TER ')) {
+    return '/lines/ter.svg'
   }
 
-  return "/lines/" + props.line.name.toLowerCase().replace(/\s/g, "_") + ".svg";
-});
+  return '/lines/' + props.line.name.toLowerCase().replace(/\s/g, '_') + '.svg'
+})
 const computeNormalImgLink = computed(() => {
-  return "/lines/" + cleanId(cleanId(props.line.id)) + ".svg";
+  return '/lines/' + cleanId(cleanId(props.line.id)) + '.svg'
+})
+const specialLineClasses = computed(() => {
+  return {
+    "line-logo": true,
+    specialLogo: isLineSpecial.value,
+    [props.className]: true,
+    "replacement-line": REPLACEMENT_LINES_IDS.includes(
+      cleanAndStripId(props.line.id)
+    ),
+  };
 });
 </script>
 <template>
   <!-- Logo Tram -->
   <img
-    :data-line-mode-and-name="
-      props.line.mode.toString().toUpperCase() + ' : ' + props.line.name
-    "
+  
+    :data-line-mode-and-name="props.line.mode.toString().toUpperCase() + ' : ' + props.line.name"
     v-if="isLineSpecial"
     :src="computeNormalImgLink"
     :data-line-id="cleanId(props.line.id)"
     :onerror="'this.onerror=null;this.src=\'' + computeBackupImgLink + '\''"
-    :class="'line-logo' + ' specialLogo ' + props.className + ' '"
+    :class="specialLineClasses"
     :style="style"
   />
   <!-- Logo Noctilien -->
-  <div
-    v-else-if="[Mode.BUS].includes(props.line.mode)"
-    :class="props.className"
-  >
+  <div v-else-if="[Mode.BUS].includes(props.line.mode)" :class="props.className">
     <BusLineLogo
-      :data-line-mode-and-name="
-        props.line.mode.toString().toUpperCase() + ' : ' + props.line.name
-      "
+      :data-line-mode-and-name="props.line.mode.toString().toUpperCase() + ' : ' + props.line.name"
       :data-line-id="cleanId(props.line.id)"
       :lineName="props.line.name"
       :height="props.size ? props.size : '100%'"
@@ -153,9 +195,7 @@ const computeNormalImgLink = computed(() => {
     v-else-if="props.line.mode === Mode.NOCTILIEN"
   >
     <NoctilienLogo
-      :data-line-mode-and-name="
-        props.line.mode.toString().toUpperCase() + ' : ' + props.line.name
-      "
+      :data-line-mode-and-name="props.line.mode.toString().toUpperCase() + ' : ' + props.line.name"
       :data-line-id="cleanId(props.line.id)"
       :lineName="props.line.name"
       :height="props.size ? props.size : '100%'"
@@ -164,17 +204,13 @@ const computeNormalImgLink = computed(() => {
     />
   </div>
   <!-- Logo Normal -->
-  <div
-    :class="'line-logo' + ' ' + props.className + ' ' + logoShape"
-    :style="style"
-    v-else
-  >
+  <div :class="'line-logo' + ' ' + props.className + ' ' + logoShape" :style="style" v-else>
     {{ props.line.name }}
   </div>
 </template>
 <style scoped>
 .line-logo {
-  font-family: "ParisineBold";
+  font-family: 'ParisineBold';
   box-sizing: border-box;
   display: flex;
   height: var(--size);

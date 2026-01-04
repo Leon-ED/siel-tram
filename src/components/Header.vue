@@ -73,6 +73,9 @@ const directionLenghtClass = computed(() => {
   line-clamp: 2;
   overflow: hidden;
 }
+.replacement-line{
+  height: 12cqh;
+}
 .long-direction {
   font-size: 11cqh;
   white-space: normal;
