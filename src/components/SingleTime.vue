@@ -20,7 +20,7 @@
       <span v-if="departure.isAtStop" class="at-platform-text">à quai</span>
     </div>
     <span class="bar" v-if="departureOrder === 0"></span>
-    <Chenillard class="time-is-unreliable" size="10em" v-if="isTimeNotReliable" />
+    <Chenillard class="time-is-unreliable" size="1.5em" v-if="isTimeNotReliable" />
   </div>
 </template>
 <script setup lang="ts">
@@ -122,6 +122,9 @@ sup {
 }
 
 .horizontal-position {
+  .time-is-unreliable{
+    --size: 2em !important;
+  }
   .vehicle-order {
     display: none;
   }

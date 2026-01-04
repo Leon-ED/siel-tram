@@ -1,7 +1,7 @@
 <template>
   <div class="departure-time h-w-100">
     <div class="destination-name">
-      <div v-html="cleanStopName(departure.destination)"></div>
+      <div v-html="departure.destination.replace(/-/g, '‑')"></div>
     </div>
     <div class="bar" v-if="departureOrder === 0"></div>
     <SingleTime
@@ -35,6 +35,7 @@ defineProps<Props>()
   background-color: white;
   color: #4d565f;
   font-size: 11cqh;
+  letter-spacing: 0.15cqh;
   padding: 0 4cqh;
   display: flex;
   align-items: center;

@@ -7,8 +7,7 @@ const props = defineProps({
 })
 const cssProps = computed(() => {
   return {
-    fontSize: props.size,
-    width: props.width,
+    ['--size']: props.size,
   }
 })
 </script>
@@ -49,8 +48,8 @@ const cssProps = computed(() => {
   /* center elem */
 }
 .loader__dot {
-  width: 1rem; /* taille du rond */
-  height: 1rem;
+  width: var(--size);
+    height: var(--size);
   margin: 0 0.2rem;
   border-radius: 50%; /* transforme en rond */
   animation: blink 600ms infinite;
