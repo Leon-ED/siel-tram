@@ -1,0 +1,58 @@
+ [
+ {
+      "ref": "MEC_BUS_PC:VEHICLEJOURNEY::20260103.19.R.C01413:LOC",
+      "lineRef": "STIF:Line::C01413:",
+      "stopPointRef": "STIF:StopPoint:Q:22494:",
+      "destinationRef": "STIF:StopPoint:Q:479504:",
+      "destinationConnectionsModes": [
+        "ter",
+        "transilien",
+        "bus",
+        "noctilien",
+        "metro"
+      ],
+      "destinationStopPointLabel": "Gare de l'Est Circulaire Intérieure",
+      "directionName": "Circulaire intérieure",
+      "branchRef": "Retour",
+      "arrivalStatus": "not_arrived",
+      "isInRealTime": true,
+      "dateTime": "2026-01-04T03:22:55.000Z",
+      "delay": 0,
+      "destinationLabel": "Circulaire Interieure",
+      "shortDestinationLabel": "Circulaire Int",
+      "journeyNote": "",
+      "vehicleNumber": "",
+      "isAtStop": true,
+      "platform": "",
+      "vehicleLength": "UNKNOWN",
+      "flags": []
+    },
+    {
+      "ref": "MEC_BUS_PC:VEHICLEJOURNEY::20260103.20.R.C01413:LOC",
+      "lineRef": "STIF:Line::C01413:",
+      "stopPointRef": "STIF:StopPoint:Q:22494:",
+      "destinationRef": "STIF:StopPoint:Q:479504:",
+      "destinationConnectionsModes": [
+        "ter",
+        "transilien",
+        "bus",
+        "noctilien",
+        "metro"
+      ],
+      "destinationStopPointLabel": "Gare de l'Est Circulaire Intérieure",
+      "directionName": "Circulaire intérieure",
+      "branchRef": "Retour",
+      "arrivalStatus": "not_arrived",
+      "isInRealTime": true,
+      "dateTime": "2026-01-04T03:46:38.000Z",
+      "delay": 0,
+      "destinationLabel": "Circulaire Interieure",
+      "shortDestinationLabel": "Circulaire Int",
+      "journeyNote": "",
+      "vehicleNumber": "",
+      "isAtStop": false,
+      "platform": "",
+      "vehicleLength": "UNKNOWN",
+      "flags": []
+    }
+    ]
