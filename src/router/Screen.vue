@@ -4,7 +4,12 @@
       <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" />
     </FitBox>
   </div>
-  <SettingsPanel :screenOptions="screenOptions" :branchesAvailable="branchesAvailable" :stop="stop" :line="line" />
+  <SettingsPanel
+    :screenOptions="screenOptions"
+    :branchesAvailable="branchesAvailable"
+    :stop="stop"
+    :line="line"
+  />
 </template>
 <script lang="ts" setup>
 import { LineService } from '@/services/lineService'
@@ -29,6 +34,7 @@ const router = useRouter()
 
 const lineId = getSingleValueFromQueryParam(route.query.line, 'string', 'null')
 const stopId = getSingleValueFromQueryParam(route.query.stop, 'string', 'null')
+const isEmbedded = getSingleValueFromQueryParam(route.query.embed, 'string', '') !== '' ? true : false
 
 const line = ref<Line | null>(null)
 const stop = ref<Stop | null>(null)
@@ -58,7 +64,7 @@ const screenOptions = reactive<ScreenSettings>({
       return DEFAULT_BRANCHES
     }
     console.log(urlBranches)
-    return Array.from(new Set([ ...urlBranches]))
+    return Array.from(new Set([...urlBranches]))
   })(),
   mode: getSingleValueFromQueryParam(route.query.mode, 'string', 'AUTO') as
     | 'DESTINATIONS'
@@ -88,8 +94,8 @@ if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
 LogService.logScreenSelection(
   lineId,
   stopId,
-  false,
-  null,
+  Boolean(isEmbedded),
+  route.query.source ? route.query.source.toString() : null,
 )
 /**
  * Gère le rafraîchissement des perturbations
@@ -111,7 +117,11 @@ LineService.getLine(cleanAndStripId(lineId)).then((fetchedLine) => {
 StopService.getStop(cleanAndStripId(stopId)).then((fetchedStop) => {
   stop.value = fetchedStop
 })
-DepartureService.getDepartures(cleanAndStripId(stopId), cleanAndStripId(lineId), departures.value).then((fetchedDepartures) => {
+DepartureService.getDepartures(
+  cleanAndStripId(stopId),
+  cleanAndStripId(lineId),
+  departures.value,
+).then((fetchedDepartures) => {
   departures.value = fetchedDepartures
 })
 </script>
