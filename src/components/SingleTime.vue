@@ -62,30 +62,37 @@ const showMinutes = computed<boolean>(() => {
 <style scoped lang="scss">
 .departure {
   box-sizing: border-box;
-  padding-top: 1.5cqh;
-  padding-left: 4cqh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
   position: relative;
   font-size: var(--base-font-size);
 }
 .vehicle-order {
-  position: absolute;
-  left: 5cqh;
+  margin-left: 5cqh;
+  margin-top: 3cqh;
   top: 3cqh;
   color: white;
   font-size: 1.5em;
 }
 .departure-time-before-arrival {
-  margin-top: 10cqh;
+  top: 16%;
+  position: absolute;
+  width: 100%;
   color: var(--ratp-yellow);
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
 }
 .time-info {
-  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 4cqh;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: 100%;
+  justify-items: center;
   align-items: baseline;
 }
 sup {
@@ -95,11 +102,13 @@ sup {
 .minutes {
   font-family: 'IDFMBold', 'ParisineBold', sans-serif;
   font-size: 10em;
+  justify-self: end;
 }
 .unit {
   font-family: 'IDFMRegular', sans-serif;
   font-size: 2em;
   opacity: 0.7;
+  justify-self: start;
 }
 .at-platform-text {
   font-family: 'IDFMBold', sans-serif;
@@ -118,24 +127,28 @@ sup {
 }
 .time-is-unreliable {
   margin-top: 8cqh;
-
 }
 
 .horizontal-position {
-  .time-is-unreliable{
+  .time-is-unreliable {
     --size: 2em !important;
   }
   .vehicle-order {
     display: none;
   }
   .departure-time-before-arrival {
-    margin-top: 0;
+    top: 5%;
   }
   .time-info {
     width: 100%;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    justify-items: center;
+    grid-template-columns: 60% 40%;
+    padding-right: 0;
+  }
+  .minutes {
+    justify-self: center;
+  }
+  .unit {
+    font-size: 2.8em;
   }
   .bar {
     right: auto;

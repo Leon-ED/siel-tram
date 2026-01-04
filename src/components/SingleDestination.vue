@@ -26,7 +26,7 @@ defineProps<Props>()
 <style scoped lang="css">
 .departure-time {
   display: grid;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 65% 35%;
   grid-auto-rows: 100%;
   position: relative;
 }
@@ -39,7 +39,7 @@ defineProps<Props>()
   padding: 0 4cqh;
   display: flex;
   align-items: center;
-  padding-right: 6cqh;
+  padding-right: 12cqh;
   white-space: normal;
   word-break: normal;
   overflow-wrap: normal;
