@@ -17,7 +17,9 @@
         <AnimatedNumber :time="Math.round(secondsBeforeArrival / 60).toString()" class="minutes" />
         <span class="unit">min</span>
       </div>
-      <span v-if="departure.isAtStop" class="at-platform-text">à quai</span>
+    </div>
+    <div v-if="departure.isAtStop" class="at-platform-text">
+      <span> à quai </span>
     </div>
     <span class="bar" v-if="departureOrder === 0"></span>
     <Chenillard class="time-is-unreliable" size="1.5em" v-if="isTimeNotReliable" />
@@ -112,7 +114,12 @@ sup {
 }
 .at-platform-text {
   font-family: 'IDFMBold', sans-serif;
+  color : var(--ratp-yellow);
   font-size: 4em;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  height: 100%;
 }
 .bar {
   --offset: 7%;
@@ -141,7 +148,7 @@ sup {
   }
   .time-info {
     width: 100%;
-    grid-template-columns: 60% 40%;
+    grid-template-columns: 65% 35%;
     padding-right: 0;
   }
   .minutes {
