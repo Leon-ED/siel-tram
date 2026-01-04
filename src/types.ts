@@ -21,6 +21,7 @@ export enum Mode{
 export interface Stop{
     id: string;
     name: string;
+    city: string;
     otherIds: string[];
 }
 

@@ -1,11 +1,11 @@
 <template>
-  <main class="screen" :class="{ 'inverted-column': options.areColumnsInverted }">
+  <main class="screen" :class="{ 'inverted-column': options.invertedColumns }">
     <section class="departures-section">
       <header class="departures-header">
         <Header :line="line" :branchesNames="branchesNames" />
       </header>
       <article class="departures" :data-view-mode="viewMode">
-        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departures.filter((d) => options.selectedBranches.includes(d.branchId))" />
+        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departures.filter((d) => options.branches.includes(d.branchId))" />
         <NameViewMode v-else-if="viewMode === 'NAMES'" />
         <NoDataAvailable v-else />
       </article>
@@ -23,8 +23,8 @@ import NoDataAvailable from './NoDataAvailable.vue'
 import { cleanStopName } from '@/utils'
 import DisruptionsPanel from './DisruptionsPanel.vue'
 export interface ScreenSettings {
-  areColumnsInverted: boolean,
-  selectedBranches: string[],
+  invertedColumns: boolean,
+  branches: string[],
 }
 
 interface Props {
@@ -36,7 +36,7 @@ const props = defineProps<Props>()
 type VIEW_MODE = 'NAMES' | 'TIMES' | 'NO_DATA'
 
 const departuresBySettings = computed<Departure[]>(() => {
-  return props.departures.filter((d) => props.options.selectedBranches.includes(d.branchId))
+  return props.departures.filter((d) => props.options.branches.includes(d.branchId))
 })
 
 const branchesNames = computed<string[]>(() => {
@@ -70,7 +70,8 @@ const viewMode = computed<VIEW_MODE>(() => {
   gap: .75%;
   grid-template-rows: 100%;
   box-sizing: border-box;
-  padding: .75% .65%;
+  padding: .1% 0;
+  padding-left: .1%;
 }
 
 .departures-section {

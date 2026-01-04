@@ -4,24 +4,18 @@
       <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" />
     </FitBox>
   </div>
-  <div class="settings-panel">
-    <label for="invert-columns">Inverser l'ordre des colonnes</label>
-    <input name="invert-columns" type="checkbox" v-model="screenOptions.areColumnsInverted" />
-    <label for="selected-branch">Branche sélectionnée</label>
-    <select name="selected-branch" v-model="screenOptions.selectedBranches" multiple="true">
-      <option v-for="branch in branchesAvailable" :key="branch" :value="branch">{{ branch }}</option>
-    </select>
-  </div>
+  <SettingsPanel :screenOptions="screenOptions" :branchesAvailable="branchesAvailable" :stop="stop" :line="line" />
 </template>
 <script lang="ts" setup>
 import { LineService } from '@/services/lineService'
 import { StopService } from '@/services/stopService'
 import { type Stop, type Line, type Departure } from '@/types'
 import { getSingleValueFromQueryParam, queryParamToArray } from '@/utils'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FitBox from '../components/FitBox.vue'
 import SielTramway, { type ScreenSettings } from '@/components/SielTramway.vue'
+import SettingsPanel from '@/components/SettingsPanel.vue'
 import { DepartureService } from '@/services/departureService'
 import { useIntervalFn } from '@vueuse/core'
 
@@ -51,20 +45,36 @@ setTimeout(
 )
 const DEFAULT_BRANCHES = ['Aller', 'Retour']
 const branchesAvailable = computed<string[]>(() => {
-  const dests = departures.value.map((dep) => dep.branchId).filter((name) => name.trim() !== "")
+  const dests = departures.value.map((dep) => dep.branchId).filter((name) => name.trim() !== '')
   return Array.from(new Set([...DEFAULT_BRANCHES, ...dests])).sort()
 })
 
 const screenOptions = reactive<ScreenSettings>({
-  areColumnsInverted: getSingleValueFromQueryParam(route.query.invertColumns, 'boolean', false),
-  selectedBranches: (() => {
+  invertedColumns: getSingleValueFromQueryParam(route.query.invertColumns, 'boolean', false),
+  branches: (() => {
     const urlBranches = queryParamToArray(route.query.branches)
     if (urlBranches.length === 0) {
       return DEFAULT_BRANCHES
     }
-    return Array.from(new Set([...DEFAULT_BRANCHES, ...urlBranches]))
+    console.log(urlBranches)
+    return Array.from(new Set([ ...urlBranches]))
   })(),
 })
+watch(
+  screenOptions,
+  (newOptions) => {
+    const nextQuery: Record<string, any> = { ...route.query }
+    for (const [key, value] of Object.entries(newOptions)) {
+      if (typeof value === 'boolean') {
+        nextQuery[key] = String(value)
+      } else {
+        nextQuery[key] = value
+      }
+    }
+    router.replace({ query: nextQuery })
+  },
+  { deep: true },
+)
 
 if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
   router.replace({ name: 'Error' })

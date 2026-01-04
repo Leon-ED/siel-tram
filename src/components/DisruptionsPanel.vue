@@ -48,6 +48,7 @@ import CurrentDisruption from './CurrentDisruption.vue'
 }
 strong {
   font-family: 'IDFMMedium', sans-serif;
+  font-weight: normal;
 }
 .message {
   font-family: 'IDFMRegular', sans-serif;

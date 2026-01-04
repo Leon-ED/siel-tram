@@ -8,6 +8,7 @@ export class StopService {
     return {
         id: apiStop.ref,
         name: apiStop.name,
+        city: apiStop.cityName,
         otherIds: [],
     }
   }
@@ -18,7 +19,12 @@ export class StopService {
         if (!response.ok) {
           return null
         }
-        return response.json().then(this.apiStopToStop)
+        return response.json().then((apiStopResponse) =>{
+          if(!apiStopResponse || !apiStopResponse.stop){
+            return null
+          }
+          return StopService.apiStopToStop(apiStopResponse.stop)
+        })
       })
       .catch(() => {
         return null
