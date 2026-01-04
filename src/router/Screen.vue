@@ -18,6 +18,7 @@ import SielTramway, { type ScreenSettings } from '@/components/SielTramway.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import { DepartureService } from '@/services/departureService'
 import { useIntervalFn } from '@vueuse/core'
+import { LogService } from '@/services/logService'
 
 const FETCH_DEPARTURES_INTERVAL_SECONDS = 30
 const FETCH_DISRUPTIONS_INTERVAL_SECONDS = 120
@@ -84,6 +85,12 @@ if (!lineId || !stopId || lineId.trim() === '' || stopId.trim() === '') {
   router.replace({ name: 'Error' })
   throw new Error('Missing line or stop parameter')
 }
+LogService.logScreenSelection(
+  lineId,
+  stopId,
+  false,
+  null,
+)
 /**
  * Gère le rafraîchissement des perturbations
  * TODO: à faire
