@@ -1,4 +1,5 @@
 import type { LocationQueryValue } from 'vue-router'
+import  { Mode } from './types';
 
 
 // STRING
@@ -59,10 +60,10 @@ export const getMinutesFromDate = (dateString: string): number => {
 export const getSecondesFromDate = (
   dateString: string,
   allowNegativesValues: boolean = false,
+  time:number = Date.now()
 ): number => {
-  const now = new Date()
   const date = new Date(dateString)
-  const diffInMs = date.getTime() - now.getTime()
+  const diffInMs = date.getTime() - time
   if (allowNegativesValues) {
     return Math.floor(diffInMs / 1000)
   }
@@ -81,4 +82,25 @@ export const cleanId = (id: string): string => {
     .split(':')
     .filter((s) => s)
     .pop() as string
+}
+
+export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
+  switch (mode) {
+    case Mode.RER:
+    case Mode.TRANSILIEN:
+      case Mode.TER:
+      return 'train'
+    case Mode.METRO:
+      return 'métro'
+    case Mode.TRAM:
+      return 'tram'
+    case Mode.BUS:
+    case Mode.NOCTILIEN:
+      return 'bus'
+    case Mode.CABLE:
+      return 'cabine'
+    default:
+      return defaultsTo
+  }
+
 }

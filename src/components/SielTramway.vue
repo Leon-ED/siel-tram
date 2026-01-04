@@ -2,7 +2,7 @@
   <main class="screen" :class="{ 'inverted-column': options.areColumnsInverted }">
     <section class="departures-section">
       <header class="departures-header">
-        <Header :line="line" direction="Noisy-le-Sec" />
+        <Header :line="line" :branchesNames="branchesNames" />
       </header>
       <article class="departures" :data-view-mode="viewMode">
         <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departures" />
@@ -31,6 +31,13 @@ interface Props {
 }
 const props = defineProps<Props>()
 type VIEW_MODE = 'NAMES' | 'TIMES' | 'NO_DATA'
+
+const branchesNames = computed<string[]>(() => {
+  const dests = props.departures.map((dep) => dep.branchName).filter((name) => name.trim() !== "")
+  return Array.from(new Set(dests)).sort()
+})
+
+
 const viewMode = computed<VIEW_MODE>(() => {
   /**
    * @TODO : ENLEVER
