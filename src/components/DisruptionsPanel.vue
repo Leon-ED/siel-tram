@@ -1,7 +1,7 @@
 <template>
   <div class="disruptions-panel h-w-100">
     <div class="disruptions-icons h-w-100">
-      <CurrentDisruption />
+      <CurrentDisruption :disruption="activeDisruption" />
       <Clock class="clock" />
     </div>
     <div class="active-disruption-message">
@@ -21,7 +21,7 @@ interface Props {
 }
 const props = defineProps<Props>()
 const DEFAULT_DISUPTION_LINE: Line = {
-  id: 'all',
+  id: 'LEONGP_FAKE_ID',
   name: 'Toutes les lignes',
   color: '#000000',
   textColor: '#FFFFFF',
@@ -37,7 +37,7 @@ const DEFAULT_DISRUPTION: Disruption = {
   line: DEFAULT_DISUPTION_LINE,
 }
 ;('')
-const DISRUPTION_SHOW_DURATION_SECONDS = 15
+const DISRUPTION_SHOW_DURATION_SECONDS = 2
 
 const activeIndex = ref(0)
 const activeDisruption = computed<Disruption>(() => {
@@ -46,7 +46,7 @@ const activeDisruption = computed<Disruption>(() => {
   if (!disruptions || disruptions.length === 0) {
     return DEFAULT_DISRUPTION
   }
-
+  console.log(disruptions[activeIndex.value ])
   return disruptions[activeIndex.value] ?? DEFAULT_DISRUPTION
 })
 const { pause, resume } = useIntervalFn(
@@ -56,7 +56,7 @@ const { pause, resume } = useIntervalFn(
     activeIndex.value = (activeIndex.value + 1) % props.disruptions.length
   },
   DISRUPTION_SHOW_DURATION_SECONDS * 1000,
-  { immediateCallback: false },
+  { immediateCallback: false,immediate: true },
 )
 watch(
   () => props.disruptions,

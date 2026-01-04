@@ -7,11 +7,28 @@
         fill="#c2cdda"
       />
     </svg>
-    <img class="main-icon" src="/public/disruptions/info.svg" alt="Icône de perturbation" />
+    <div class="content-container">
+      <LineLogo :line="disruption.line" class="line-logo" class-name="absolute-logo" :size="disruption.line.id === 'LEONGP_FAKE_ID' ?'25cqh' : '18cqh'" />
+      <img
+        class="disruption-icon"
+        :src="DisruptionService.getIconForImpact(disruption.impact)"
+        alt="Icône de perturbation"
+        v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
+      />
+    </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { DisruptionService } from '@/services/disruptionService'
+import type { Disruption } from '@/types'
+import LineLogo from './LineLogo.vue'
+
+interface Props {
+  disruption: Disruption
+}
+defineProps<Props>()
+</script>
 
 <style scoped lang="css">
 .icon-container {
@@ -30,5 +47,24 @@ svg {
   z-index: 1;
   padding-top: 1cqh;
   height: 23.5cqh;
+}
+.content-container {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.line-logo {
+  margin-top: -1.5cqh;
+  margin-left: 2.5cqh;
+}
+.disruption-icon {
+  height: 11cqh;
+  width: auto;
+  margin-left: -3cqh;
+  margin-top: 9cqh;
 }
 </style>

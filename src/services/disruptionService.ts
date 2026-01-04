@@ -5,15 +5,29 @@ import {
   type DisruptionStatus,
   type Line,
 } from '@/types'
-import { getStringRealLength } from '@/utils'
+import { cleanAndStripId, getStringRealLength } from '@/utils'
 const API_URL = import.meta.env.VITE_API_URL
 const MAX_CHARS_DESCRIPTION = 500
 
 export class DisruptionService {
   private static DISRUPTION_ENDPOINT = API_URL + 'disruptions/'
 
+  public static getIconForImpact(impact: DisruptionImpact | undefined): string {
+    const BASE_ICON_PATH = '/src/assets/icons/disruptions/'
+    switch (impact) {
+      case 'SUSPENSION':
+        return BASE_ICON_PATH + 'suspended.svg'
+      case 'DELAY':
+        return BASE_ICON_PATH + 'delay.svg'
+      case 'INFO':
+        return BASE_ICON_PATH + 'info_line.svg'
+      default:
+        return BASE_ICON_PATH + 'info_line.svg'
+    }
+  }
+
   private static apiDisruptionToDisruption(apiDisruption: any, lines: Line[]): Disruption {
-    const line = lines.find((line) => line.id === apiDisruption.lineId)!
+    const line = lines.find((line) => apiDisruption.affectedLinesRefs.map((l: any) => cleanAndStripId(l)).includes(cleanAndStripId(line.id)))!
 
     const apiStatusToStatus = (status: string): DisruptionStatus => {
       switch (status) {
@@ -36,6 +50,8 @@ export class DisruptionService {
           if ([Mode.METRO, Mode.TRANSILIEN, Mode.RER, Mode.TER, Mode.TRAM].includes(line.mode)) {
             return 'SUSPENSION'
           }
+          return 'DELAY'
+        case 'DISRUPTED':
           return 'DELAY'
         case 'INFO':
           return 'INFO'

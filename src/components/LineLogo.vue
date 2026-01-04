@@ -93,6 +93,7 @@ const isLineSpecial = computed(() => {
     'BIEVRES',
   ]
   const specialIds = [
+    'LEONGP_FAKE_ID',
     'C01840',
     'C01841',
     'C02310',
