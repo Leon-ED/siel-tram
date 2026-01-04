@@ -28,14 +28,12 @@ export class DepartureService {
     lineId: string,
     oldDepartures: Departure[],
   ): Promise<Departure[]> {
-    /**
-     * return mock
-     */
-    return Promise.resolve(
-      (mock as any[]).map(DepartureService.apiDepartureToDeparture)
-    )
-
-
+    // /**
+    //  * return mock
+    //  */
+    // return Promise.resolve(
+    //   (mock as any[]).map(DepartureService.apiDepartureToDeparture)
+    // )
     const url: URL = new URL(this.DEPARTURE_ENDPOINT  + stopId)
     url.searchParams.append('getLineNotice', 'false')
     url.searchParams.append('returnStopPoint', 'false')
@@ -57,7 +55,13 @@ export class DepartureService {
             console.error(`API response invalid for lineId ${lineId} and stopId ${stopId}`)
             return oldDepartures
           }
-          return apiDeparturesResponse.departures.map(DepartureService.apiDepartureToDeparture)
+          return apiDeparturesResponse.departures
+          .filter((dep: any) => 
+          {
+            const forbiddenFlags = ['TERMINATES_HERE', 'SERVICE_IS_CANCELLED']
+            return !dep.notices?.some((notice: any) => forbiddenFlags.includes(notice.flag))
+          })
+          .map(DepartureService.apiDepartureToDeparture)
         })
       })
       .catch((error) => {
