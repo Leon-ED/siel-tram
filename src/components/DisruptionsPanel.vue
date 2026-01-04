@@ -46,7 +46,6 @@ const activeDisruption = computed<Disruption>(() => {
   if (!disruptions || disruptions.length === 0) {
     return DEFAULT_DISRUPTION
   }
-  console.log(disruptions[activeIndex.value ])
   return disruptions[activeIndex.value] ?? DEFAULT_DISRUPTION
 })
 const { pause, resume } = useIntervalFn(

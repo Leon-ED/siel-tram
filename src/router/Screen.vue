@@ -22,13 +22,52 @@ import FitBox from '../components/FitBox.vue'
 import SielTramway, { type ScreenSettings } from '@/components/SielTramway.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import { DepartureService } from '@/services/departureService'
-import { useIntervalFn } from '@vueuse/core'
+import { useDocumentVisibility, useIntervalFn } from '@vueuse/core'
 import { LogService } from '@/services/logService'
 import { DisruptionService } from '@/services/disruptionService'
 
 const FETCH_DEPARTURES_INTERVAL_SECONDS = 30
 const FETCH_DISRUPTIONS_INTERVAL_SECONDS = 120
 const APP_FORCE_RELOAD_DELAY_HOURS = 6
+
+/**
+ * Date de la dernière mise à jour des données de départs
+ */
+const LAST_DEPARTURES_UPDATE = ref<Date | null>(null)
+const LAST_DISRUPTIONS_UPDATE = ref<Date | null>(null)
+const visibility = useDocumentVisibility();
+
+watch(visibility, (newVisibility) => {
+  console.info('Visibility changed to', newVisibility);
+  if (newVisibility !== 'visible') {
+    return;
+  }
+  // Si la date de la dernière mise à jour des départs est nulle ou trop ancienne, on force une mise à jour
+  const now = new Date();
+  if (
+    !LAST_DEPARTURES_UPDATE.value ||
+    (now.getTime() - LAST_DEPARTURES_UPDATE.value.getTime()) / 1000 >
+      FETCH_DEPARTURES_INTERVAL_SECONDS
+  ) {
+    LAST_DEPARTURES_UPDATE.value = now;
+    DepartureService.getDepartures(stopId!, lineId!, departures.value).then((fetchedDepartures) => {
+      departures.value = fetchedDepartures;
+    });
+  }
+  // Si la date de la dernière mise à jour des perturbations est nulle ou trop ancienne, on force une mise à jour
+  if (
+    !LAST_DISRUPTIONS_UPDATE.value ||
+    (now.getTime() - LAST_DISRUPTIONS_UPDATE.value.getTime()) / 1000 >
+      FETCH_DISRUPTIONS_INTERVAL_SECONDS
+  ) {
+    LAST_DISRUPTIONS_UPDATE.value = now;
+    if (line.value) {
+      DisruptionService.getDisruptions([line.value]).then((_disruptions) => {
+        disruptions.value = _disruptions;
+      });
+    }
+  }
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -65,7 +104,6 @@ const screenOptions = reactive<ScreenSettings>({
     if (urlBranches.length === 0) {
       return DEFAULT_BRANCHES
     }
-    console.log(urlBranches)
     return Array.from(new Set([...urlBranches]))
   })(),
   mode: getSingleValueFromQueryParam(route.query.mode, 'string', 'AUTO') as
@@ -101,17 +139,24 @@ LogService.logScreenSelection(
 )
 const disruptions = ref<Disruption[]>([])
 useIntervalFn(() => {
-  if (!line.value) return
+  if (!line.value || visibility.value === 'hidden') {
+    return
+  }
   DisruptionService.getDisruptions([line.value]).then((_disruptions) => {
     disruptions.value = _disruptions
+    LAST_DISRUPTIONS_UPDATE.value = new Date();
   })
 }, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
 /**
  * Gère le rafraîchissement des départs
  */
 useIntervalFn(() => {
+  if (visibility.value === 'hidden') {
+    return
+  }
   DepartureService.getDepartures(stopId!, lineId!, departures.value).then((fetchedDepartures) => {
     departures.value = fetchedDepartures
+    LAST_DEPARTURES_UPDATE.value = new Date();
   })
 }, FETCH_DEPARTURES_INTERVAL_SECONDS * 1_000)
 

@@ -27,7 +27,6 @@ const animateChange = async () => {
 }
 watch(time, (newVal, oldVal) => {
   if (newVal !== oldVal) {
-    console.log('Animating change for AnimatedNumber from', oldVal, 'to', newVal)
     animateChange()
   }
 })
