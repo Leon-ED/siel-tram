@@ -53,7 +53,7 @@ const secondsBeforeArrival = computed(() => {
  * Sert à savoir s'il faut afficher les trois points jaunes ...
  */
 const isTimeNotReliable = computed<boolean>(() => {
-  return true || secondsBeforeArrival.value < NEGATIVE_THRESHOLD_SECONDS && !departure.value.isAtStop
+  return secondsBeforeArrival.value < NEGATIVE_THRESHOLD_SECONDS && !departure.value.isAtStop
 })
 const showMinutes = computed<boolean>(() => {
   return isTimeNotReliable.value === false && !departure.value.isAtStop
@@ -117,7 +117,7 @@ sup {
   height: calc(100% - var(--offset) * 2);
 }
 .time-is-unreliable {
-  align-self: flex-end;
+  margin-top: 8cqh;
 
 }
 
