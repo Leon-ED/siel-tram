@@ -1,5 +1,9 @@
 <template>
-  <div class="departure h-w-100" :data-index="departureOrder">
+  <div
+    class="departure h-w-100"
+    :data-index="departureOrder"
+    :style="{ '--base-font-size': baseFontSize || '5cqh' }"
+  >
     <div class="vehicle-order">
       {{ departureOrder + 1
       }}<sup>
@@ -16,7 +20,7 @@
       <span v-if="departure.isAtStop" class="at-platform-text">à quai</span>
     </div>
     <span class="bar" v-if="departureOrder === 0"></span>
-    <Chenillard size="50cqh" v-if="isTimeNotReliable" />
+    <Chenillard class="time-is-unreliable" size="10em" v-if="isTimeNotReliable" />
   </div>
 </template>
 <script setup lang="ts">
@@ -30,11 +34,12 @@ import AnimatedNumber from './AnimatedNumber.vue'
 interface Props {
   departure: Departure
   departureOrder: number
+  baseFontSize?: string
 }
 const NEGATIVE_THRESHOLD_SECONDS = -30
 
 const props = defineProps<Props>()
-const { departure, departureOrder } = toRefs(props)
+const { departure, departureOrder, baseFontSize } = toRefs(props)
 
 const now = useNow({ interval: 4_000 })
 
@@ -48,13 +53,13 @@ const secondsBeforeArrival = computed(() => {
  * Sert à savoir s'il faut afficher les trois points jaunes ...
  */
 const isTimeNotReliable = computed<boolean>(() => {
-  return secondsBeforeArrival.value < NEGATIVE_THRESHOLD_SECONDS && !departure.value.isAtStop
+  return true || secondsBeforeArrival.value < NEGATIVE_THRESHOLD_SECONDS && !departure.value.isAtStop
 })
 const showMinutes = computed<boolean>(() => {
   return isTimeNotReliable.value === false && !departure.value.isAtStop
 })
 </script>
-<style scoped lang="css">
+<style scoped lang="scss">
 .departure {
   box-sizing: border-box;
   padding-top: 1.5cqh;
@@ -63,13 +68,14 @@ const showMinutes = computed<boolean>(() => {
   flex-direction: column;
   justify-content: center;
   position: relative;
+  font-size: var(--base-font-size);
 }
 .vehicle-order {
   position: absolute;
   left: 5cqh;
   top: 3cqh;
   color: white;
-  font-size: 7.5cqh;
+  font-size: 1.5em;
 }
 .departure-time-before-arrival {
   margin-top: 10cqh;
@@ -88,16 +94,16 @@ sup {
 }
 .minutes {
   font-family: 'IDFMBold', 'ParisineBold', sans-serif;
-  font-size: 50cqh;
+  font-size: 10em;
 }
 .unit {
   font-family: 'IDFMRegular', sans-serif;
-  font-size: 10cqh;
+  font-size: 2em;
   opacity: 0.7;
 }
 .at-platform-text {
   font-family: 'IDFMBold', sans-serif;
-  font-size: 20cqh;
+  font-size: 4em;
 }
 .bar {
   --offset: 7%;
@@ -109,5 +115,31 @@ sup {
   background-color: #fff;
   border-radius: 999px;
   height: calc(100% - var(--offset) * 2);
+}
+.time-is-unreliable {
+  align-self: flex-end;
+
+}
+
+.horizontal-position {
+  .vehicle-order {
+    display: none;
+  }
+  .departure-time-before-arrival {
+    margin-top: 0;
+  }
+  .time-info {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+  }
+  .bar {
+    right: auto;
+    top: 100%;
+    left: var(--offset);
+    height: 2%;
+    width: calc(100% - var(--offset) * 2);
+  }
 }
 </style>

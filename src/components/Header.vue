@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" :class="{['view-mode-'+viewMode.toLowerCase()]: true }">
     <LineLogo :line="line" size="21cqh" class-name="logo" />
     <div class="directions">
       <h1 class="direction" :class="directionLenghtClass" v-if="branchesNames.length > 0" v-html="branchesNames.join(' • ')"
@@ -15,6 +15,7 @@ import { getStringRealLength } from '@/utils'
 interface Props {
   line: Line
   branchesNames: string[]
+  viewMode: string
 }
 const props = defineProps<Props>()
 
@@ -46,6 +47,9 @@ const directionLenghtClass = computed(() => {
   display: flex;
   align-items: center;
   gap: 4cqh;
+}
+.view-mode-destinations{
+  border-bottom-left-radius: 0;
 }
 .directions {
   color: #221f21;

@@ -2,11 +2,14 @@
   <main class="screen" :class="{ 'inverted-column': options.invertedColumns }">
     <section class="departures-section">
       <header class="departures-header">
-        <Header :line="line" :branchesNames="branchesNames" />
+        <Header :line="line" :branchesNames="branchesNames" :viewMode="viewMode" />
       </header>
       <article class="departures" :data-view-mode="viewMode">
-        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departures.filter((d) => options.branches.includes(d.branchId))" />
-        <NameViewMode v-else-if="viewMode === 'NAMES'" />
+        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departuresBySettings" />
+        <DestinationViewMode
+          v-else-if="viewMode === 'DESTINATIONS'"
+          :departures="departuresBySettings"
+        />
         <NoDataAvailable v-else />
       </article>
     </section>
@@ -18,13 +21,13 @@ import type { Departure, Line } from '@/types'
 import Header from './Header.vue'
 import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
-import NameViewMode from './DestinationViewMode.vue'
 import NoDataAvailable from './NoDataAvailable.vue'
 import { cleanStopName } from '@/utils'
 import DisruptionsPanel from './DisruptionsPanel.vue'
+import DestinationViewMode from './DestinationViewMode.vue'
 export interface ScreenSettings {
-  invertedColumns: boolean,
-  branches: string[],
+  invertedColumns: boolean
+  branches: string[]
 }
 
 interface Props {
@@ -33,17 +36,18 @@ interface Props {
   options: ScreenSettings
 }
 const props = defineProps<Props>()
-type VIEW_MODE = 'NAMES' | 'TIMES' | 'NO_DATA'
+type VIEW_MODE = 'DESTINATIONS' | 'TIMES' | 'NO_DATA'
 
 const departuresBySettings = computed<Departure[]>(() => {
   return props.departures.filter((d) => props.options.branches.includes(d.branchId))
 })
 
 const branchesNames = computed<string[]>(() => {
-  const dests = departuresBySettings.value.map((dep) => cleanStopName(dep.branchName)).filter((name) => name.trim() !== "")
+  const dests = departuresBySettings.value
+    .map((dep) => cleanStopName(dep.branchName))
+    .filter((name) => name.trim() !== '')
   return Array.from(new Set(dests)).sort()
 })
-
 
 const viewMode = computed<VIEW_MODE>(() => {
   // Si on n'a pas de départs, on affiche NO_DATA
@@ -51,11 +55,26 @@ const viewMode = computed<VIEW_MODE>(() => {
     return 'NO_DATA'
   }
   // Si tous les départs n'ont pas le même destination, on affiche NAMES
-  const areAllSameDestination =departuresBySettings.value.every(
+  const areAllSameDestination = departuresBySettings.value.every(
     //@ts-ignore // On ignore car on sait que departures n'est pas vide ici
-    (departure) => departure.destination ===departuresBySettings.value[0].destination,
+    (departure) => departure.destination === departuresBySettings.value[0].destination,
   )
-  return areAllSameDestination ? 'TIMES' : 'NAMES'
+  // Si tous les départs contiennent dans le nom de leur destination le même nom de branche ou l'inverse
+  const areAllSameBranchName = departuresBySettings.value.every(
+    //@ts-ignore // On ignore car on sait que departures n'est pas vide ici
+    (departure): boolean => {
+      const depBranchName = cleanStopName(departure.branchName).toLowerCase()
+      //@ts-ignore
+      const firstDepBranchName = cleanStopName(departuresBySettings.value[0].branchName).toLowerCase()
+
+      const destName = departure.destination.toLowerCase()
+      return (
+        (depBranchName.includes(firstDepBranchName) || firstDepBranchName.includes(depBranchName)) || destName.includes(firstDepBranchName) || firstDepBranchName.includes(destName)
+      )
+    }
+  )
+  console.log({ areAllSameDestination, areAllSameBranchName, departuresBySettings: departuresBySettings.value })
+  return areAllSameDestination && areAllSameBranchName ? 'TIMES' : 'DESTINATIONS'
 })
 </script>
 <style scoped lang="scss">
@@ -67,11 +86,11 @@ const viewMode = computed<VIEW_MODE>(() => {
   background-color: black;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: .75%;
+  gap: 0.75%;
   grid-template-rows: 100%;
   box-sizing: border-box;
-  padding: .1% 0;
-  padding-left: .1%;
+  padding: 0.1% 0;
+  padding-left: 0.1%;
 }
 
 .departures-section {

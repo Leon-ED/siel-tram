@@ -169,6 +169,7 @@ export const getVehicleName = (mode: Mode,defaultsTo:string): string => {
 
     const replace = new Map<string, string>([
       [" - ", "–"],
+      ['Noisy le Sec', 'Noisy-le-Sec'],
       ["Porte ", "P<sup>te</sup> "],
       ["Villiers-sur-Marne – Le Plessis-Trévise", "Villiers-sur-Marne"],
       ["Villiers-sur-Marne - Le Plessis-Trévise", "Villiers-sur-Marne"],
