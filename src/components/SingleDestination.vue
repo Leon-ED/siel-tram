@@ -3,7 +3,7 @@
     <div class="destination-name">
       <div v-html="cleanStopName(departure.destination,false).replace(/-/g, '‑')"></div>
     </div>
-    <div class="bar" v-if="departureOrder === 0"></div>
+    <div class="bar" v-if="departureOrder === 1"></div>
     <SingleTime
       :departure="departure"
       :departure-order="departureOrder"
@@ -51,7 +51,7 @@ defineProps<Props>()
   content: '';
   position: absolute;
   right: auto;
-  top: 100%;
+  bottom: 100%;
   left: var(--offset);
   z-index: 10;
   height: 2%;

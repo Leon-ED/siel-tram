@@ -21,7 +21,7 @@
     <div v-if="departure.isAtStop" class="at-platform-text">
       <span> à quai </span>
     </div>
-    <span class="bar" v-if="departureOrder === 0"></span>
+    <span class="bar" v-if="departureOrder === 1"></span>
     <Chenillard class="time-is-unreliable" size="1.5em" v-if="isTimeNotReliable" />
   </div>
 </template>
@@ -126,7 +126,7 @@ sup {
   content: '';
   position: absolute;
   top: var(--offset);
-  right: -1%;
+  left: -1%;
   width: 0.85%;
   background-color: #fff;
   border-radius: 999px;
@@ -159,7 +159,8 @@ sup {
   }
   .bar {
     right: auto;
-    top: 100%;
+    top:0;
+    bottom: 100%;
     left: var(--offset);
     height: 2%;
     width: calc(100% - var(--offset) * 2);
