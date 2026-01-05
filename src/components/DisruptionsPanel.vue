@@ -130,16 +130,18 @@ const upcomingDisruptions = computed(() => {
   border-top-right-radius: inherit;
   display: grid;
   grid-template-rows: 100%;
-  grid-template-columns: 21% 75%;
+  grid-template-columns: 23% 77%;
 }
 .upcoming-disruptions {
   height: 100%;
   width: 100%;
-  display: flex;
-  gap: 2cqh;
-  justify-content: flex-start;
-  align-items: center;
   margin-top: 2cqh;
+  display: grid;
+  grid-template-columns: repeat(5,12%);
+  align-items: center;
+  gap: 2cqh;
+
+
 }
 .upcoming-disruption {
   aspect-ratio: 1;
