@@ -11,7 +11,7 @@
         :line="disruption.line"
         class="line-logo"
         class-name="absolute-logo"
-        :size="disruption.line.id === 'LEONGP_FAKE_ID' ? '10cqh' : '8cqh'"
+        :size="lineLogoSize"
       />
       <img
         class="disruption-icon"
@@ -56,12 +56,23 @@ svg {
 
 <script setup lang="ts">
 import { DisruptionService } from '@/services/disruptionService'
-import type { Disruption } from '@/types'
+import { Mode, type Disruption } from '@/types'
 import LineLogo from './LineLogo.vue'
+import { computed } from 'vue';
 
 interface Props {
   disruption: Disruption
 }
-defineProps<Props>()
-</script>
+const { disruption } = defineProps<Props>()
 
+const lineLogoSize = computed(() => {
+  if (disruption.line.id === 'LEONGP_FAKE_ID') {
+    return '10cqh'
+  }
+  const smallerLogosModes = [Mode.BUS, Mode.AUTRE, Mode.NOCTILIEN]
+  if (smallerLogosModes.includes(disruption.line.mode)) {
+    return '6cqh'
+  }
+  return '8cqh'
+})
+</script>

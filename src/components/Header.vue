@@ -1,6 +1,6 @@
 <template>
   <div class="header" :class="{['view-mode-'+viewMode.toLowerCase()]: true }">
-    <LineLogo :line="line" size="21cqh" class-name="logo" />
+    <LineLogo :line="line" :size="lineLogoSize" class-name="logo" />
     <div class="directions">
       <h1 class="direction" :class="directionLenghtClass" v-if="branchesNames.length > 0" v-html="branchesNames.join(' • ')"
       </h1>
@@ -8,7 +8,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import type { Line } from '@/types'
+import { Mode, type Line } from '@/types'
 import LineLogo from './LineLogo.vue'
 import { computed } from 'vue'
 import { getStringRealLength } from '@/utils'
@@ -30,8 +30,14 @@ const directionLenghtClass = computed(() => {
   if (length > 20) {
     return 'long-direction'
   }
-
   return ''
+})
+const lineLogoSize = computed(() => {
+  const smallerLogosModes = [Mode.BUS, Mode.AUTRE, Mode.NOCTILIEN]
+  if (smallerLogosModes.includes(props.line.mode)) {
+    return '15cqh'
+  }
+  return '21cqh'
 })
 </script>
 <style scoped lang="css">

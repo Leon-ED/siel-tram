@@ -11,21 +11,19 @@
     <div class="content-container">
       <Transition name="icon-slide">
         <div class="logo-wrapper" :key="disruption.id">
-          
-          <LineLogo 
-            :line="disruption.line" 
-            class="line-logo" 
-            class-name="absolute-logo" 
-            :size="disruption.line.id === 'LEONGP_FAKE_ID' ?'25cqh' : '18cqh'" 
+          <LineLogo
+            :line="disruption.line"
+            class="line-logo"
+            class-name="absolute-logo"
+            :size="lineLogoSize"
           />
-          
+
           <img
             class="disruption-icon blink"
             :src="DisruptionService.getIconForImpact(disruption.impact)"
             alt="Icône de perturbation"
             v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
           />
-
         </div>
       </Transition>
     </div>
@@ -34,13 +32,25 @@
 
 <script setup lang="ts">
 import { DisruptionService } from '@/services/disruptionService'
-import type { Disruption } from '@/types'
+import { Mode, type Disruption } from '@/types'
 import LineLogo from './LineLogo.vue'
+import { computed } from 'vue'
 
 interface Props {
   disruption: Disruption
 }
-defineProps<Props>()
+const { disruption } = defineProps<Props>()
+
+const lineLogoSize = computed(() => {
+  if (disruption.line.id === 'LEONGP_FAKE_ID') {
+    return '25cqh'
+  }
+  const smallerLogosModes = [Mode.BUS, Mode.AUTRE, Mode.NOCTILIEN]
+  if (smallerLogosModes.includes(disruption.line.mode)) {
+    return '14cqh'
+  }
+  return '18cqh'
+})
 </script>
 
 <style scoped lang="css">
@@ -65,7 +75,7 @@ svg {
   height: 100%;
   width: 115%; /* S'assure de prendre la largeur définie par le parent/SVG */
   /* CRUCIAL : Overflow hidden ici pour que l'icône qui sort ne dépasse pas du trapèze */
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 /* Nouveau wrapper pour gérer le flexbox de positionnement */
@@ -81,7 +91,7 @@ svg {
   margin-top: -1.5cqh;
   margin-left: 2.5cqh;
   /* S'assure que le logo ne se déforme pas pendant l'anim */
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .disruption-icon {
@@ -95,7 +105,9 @@ svg {
 
 .icon-slide-enter-active,
 .icon-slide-leave-active {
-  transition: transform 1s ease-out, opacity 1s ease-out;
+  transition:
+    transform 1s ease-out,
+    opacity 1s ease-out;
 }
 
 /* Pendant le départ, on le sort du flux pour que le nouveau prenne sa place exacte */
