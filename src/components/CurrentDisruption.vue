@@ -97,8 +97,8 @@ svg {
 .disruption-icon {
   height: 11cqh;
   width: auto;
-  margin-left: -5cqh;
-  margin-top: 9cqh;
+  margin-left: -2cqh;
+  margin-top: 10cqh;
 }
 
 /* === ANIMATION (Slide vers la gauche) === */
