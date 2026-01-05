@@ -32,6 +32,9 @@ svg {
   height: 100%;
   width: fit-content;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .content-container {
   position: relative;
@@ -42,10 +45,7 @@ svg {
   justify-content: center;
   align-items: center;
 }
-.line-logo {
-  margin-top: -1cqh;
-  margin-left: 5cqh;
-}
+
 .disruption-icon {
   height: 4cqh;
   width: auto;
