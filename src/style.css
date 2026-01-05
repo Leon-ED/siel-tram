@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: 'IDFMBold';
-  src: url('./assets/fonts/IDFVoyageur-Bold.ttf') format('truetype');
+  src: url('./assets/fonts/IDFVoyageur-BoldV2.woff2') format('woff2');
 }
 @font-face {
   font-family: 'IDFMRegular';

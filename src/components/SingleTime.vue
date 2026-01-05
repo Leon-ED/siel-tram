@@ -21,8 +21,9 @@
     <div v-if="departure.isAtStop" class="at-platform-text">
       <span> à quai </span>
     </div>
-    <span class="bar" v-if="departureOrder === 1"></span>
     <Chenillard class="time-is-unreliable" size="1.5em" v-if="isTimeNotReliable" />
+    <span class="bar" v-if="departureOrder === 1"></span>
+
   </div>
 </template>
 <script setup lang="ts">
@@ -78,7 +79,7 @@ const showMinutes = computed<boolean>(() => {
   font-size: 1.5em;
 }
 .departure-time-before-arrival {
-  top: 16%;
+  top: 30%;
   position: absolute;
   width: 100%;
   color: var(--ratp-yellow);
@@ -92,7 +93,8 @@ const showMinutes = computed<boolean>(() => {
   padding-right: 4cqh;
   height: 100%;
   display: grid;
-  grid-template-columns: 72.5% 27.5%;
+  margin-left: 20%;
+  grid-template-columns: 70% 30%;
   grid-template-rows: 100%;
   justify-items: center;
   align-items: baseline;
@@ -102,9 +104,9 @@ sup {
   font-size: 0.65em;
 }
 .minutes {
-  font-family: 'IDFMBold', 'ParisineBold', sans-serif;
+  font-family: 'IDFMBold', sans-serif;
   font-size: 10em;
-  justify-self: end;
+  justify-self: center;
 }
 .unit {
   font-family: 'IDFMRegular', sans-serif;
@@ -144,10 +146,11 @@ sup {
     display: none;
   }
   .departure-time-before-arrival {
-    top: 5%;
+    top: 15%;
   }
   .time-info {
     width: 100%;
+    margin-left: 5%;
     grid-template-columns: 65% 35%;
     padding-right: 0;
   }
