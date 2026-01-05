@@ -59,9 +59,21 @@ export class DepartureService {
           .filter((dep: any) => 
           {
             const forbiddenFlags = ['TERMINATES_HERE', 'SERVICE_IS_CANCELLED']
+            // si le départ aurait du avoir lieu y'a plus de 15 minutes on le filtre aussi
+            const departureTime = new Date(dep.dateTime).getTime()
+            const currentTime = Date.now()
+            if (currentTime - departureTime > 10 * 60 * 1000) {
+              return false
+            }
+
             return !dep.flags?.some((flag: any) => forbiddenFlags.includes(flag))
           })
           .map(DepartureService.apiDepartureToDeparture)
+          .sort((a: Departure, b: Departure) => {
+            const timeA = new Date(a.time).getTime()
+            const timeB = new Date(b.time).getTime()
+            return timeA - timeB
+          })
         })
       })
       .catch((error) => {
