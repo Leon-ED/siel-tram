@@ -33,7 +33,7 @@
 }
 @font-face {
   font-family: 'IDFMMedium';
-  src: url('./assets/fonts/IDFVoyageur-Medium.ttf') format('truetype');
+  src: url('./assets/fonts/IDFVoyageur-MediumV2.woff2') format('woff2');
 }
 @font-face {
   font-family: 'GFontRegular';
