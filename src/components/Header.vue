@@ -27,7 +27,7 @@ const directionLenghtClass = computed(() => {
   if (length > 50) {
     return 'very-long-direction'
   }
-  if (length > 20) {
+  if (length >= 20) {
     return 'long-direction'
   }
   return ''
