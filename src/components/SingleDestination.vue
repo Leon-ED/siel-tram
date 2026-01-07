@@ -1,7 +1,8 @@
 <template>
   <div class="departure-time h-w-100">
     <div class="destination-name">
-      <div v-html="cleanStopName(departure.destination,false).replace(/-/g, '‑')"></div>
+      <div class="destination-name-text" :class="destinationNameLenghtClass"
+       v-html="cleanStopName(departure.destination,false).replace(/-/g, '‑')"></div>
     </div>
     <div class="bar" v-if="departureOrder === 1"></div>
     <SingleTime
@@ -15,13 +16,25 @@
 <script setup lang="ts">
 import type { Departure } from '@/types'
 import SingleTime from './SingleTime.vue'
-import { cleanStopName } from '@/utils'
+import { cleanStopName, getStringRealLength } from '@/utils'
+import { computed } from 'vue'
 
 interface Props {
   departure: Departure
   departureOrder: number
 }
-defineProps<Props>()
+const {departure } = defineProps<Props>()
+const destinationNameLenghtClass = computed(() => {
+  const length = getStringRealLength(departure.destination)
+  if(length > 60){
+    return 'very-long-destination'
+  }
+  if(length > 30){
+    return 'long-destination'
+  }
+  return ''
+})
+
 </script>
 <style scoped lang="css">
 .departure-time {
@@ -45,7 +58,17 @@ defineProps<Props>()
   overflow-wrap: normal;
   hyphens: none;
 }
-
+.long-destination {
+  font-size: .9em;
+}
+.very-long-destination {
+  font-size: .75em;
+}
+.destination-name-text {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .bar {
   --offset: 2%;
   content: '';
