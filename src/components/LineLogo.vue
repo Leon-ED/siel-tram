@@ -87,6 +87,7 @@ const isLineSpecial = computed(() => {
     'PORT',
     'EOLIEN',
     'AS',
+    "TUC",
     'LBLEUE',
     'THIAIS',
     'CHOISYBUS',
