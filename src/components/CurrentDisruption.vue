@@ -47,7 +47,7 @@ const lineLogoSize = computed(() => {
   }
   const smallerLogosModes = [Mode.BUS, Mode.AUTRE, Mode.NOCTILIEN]
   if (smallerLogosModes.includes(disruption.line.mode)) {
-    return '14cqh'
+    return '12cqh'
   }
   return '18cqh'
 })
