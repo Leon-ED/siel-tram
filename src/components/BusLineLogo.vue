@@ -1,15 +1,15 @@
 <template>
   <svg
-    width="2704"
+    width="3016"
     height="1939"
-    viewBox="0 0 2704 1939"
+    viewBox="0 0 3016 1939"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     :style="style"
     :class="classes"
   >
     <g clip-path="url(#clip0_28_16)">
-      <rect width="2704" height="1939" :fill="bgColor" />
+      <rect width="3016" height="1939" :fill="bgColor" />
       <text
         x="50%"
         :y="wrappedLines.length > 1 ? '30%' : '50%'"
@@ -33,54 +33,54 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue'
 
 interface Props {
-  lineName: string;
-  height: string;
-  baseFontSize?: string;
-  bgColor: string;
-  textColor: string;
-  style?: string;
+  lineName: string
+  height: string
+  baseFontSize?: string
+  bgColor: string
+  textColor: string
+  style?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  baseFontSize: "1400",
-  style: "RATP",
-});
+  baseFontSize: '1400',
+  style: 'RATP',
+})
 
 const style = computed(() => ({
-  "--height": props.height,
-  "font-size": "1400",
-}));
+  '--height': props.height,
+  'font-size': '1400',
+}))
 
 const classes = computed(() => ({
   chars_3: props.lineName.length <= 3,
   chars_4: props.lineName.length === 4,
   more4chars: props.lineName.length > 4,
-  "idfm-style": props.style === "IDFM",
-}));
+  'idfm-style': props.style === 'IDFM',
+}))
 
 const getFontSize = (length: number): number => {
   if (length <= 2) {
-    return 1800;
+    return 2000
   }
-  if (length <= 3){
-    return 1300;
+  if (length <= 3) {
+    return 1500
   }
   if (length === 4) {
-    return 1150;
+    return 1200
   }
-    if (length === 5) {
-    return 750;
+  if (length === 5) {
+    return 1000
   }
-  return 700;
-};
+  return 800
+}
 
 const wrappedLines = computed(() => {
   const MAX_LINE_LENGTH = 7
 
-  // 1. On commence par séparer la ligne sur les espaces, 
+  // 1. On commence par séparer la ligne sur les espaces,
   //    pour traiter chaque "mot" indépendamment.
   const rawParts = props.lineName.split(' ')
 
@@ -107,8 +107,8 @@ const wrappedLines = computed(() => {
     }
   })
 
-  // 3. Maintenant, chaque segment ne contient ni espace, ni "BUS" à l’intérieur 
-  //    (seulement éventuellement en fin de segment). Il faut découper ces segments 
+  // 3. Maintenant, chaque segment ne contient ni espace, ni "BUS" à l’intérieur
+  //    (seulement éventuellement en fin de segment). Il faut découper ces segments
   //    si leur longueur dépasse MAX_LINE_LENGTH (= 7).
   const finalLines: string[] = []
   segmentsAfterBusSplit.forEach((seg) => {
@@ -131,7 +131,7 @@ svg {
   display: block;
   height: var(--height);
   width: auto;
-  font-family: "ParisineBold";
+  font-family: 'ParisineBold';
 }
 svg.more4chars text {
   white-space: pre-wrap;
@@ -140,8 +140,7 @@ svg.more4chars text {
   text-overflow: ellipsis;
 }
 svg.idfm-style {
-  font-family: "IDFMMedium" !important;
+  font-family: 'IDFMMedium' !important;
   border-radius: 10% !important;
 }
-
 </style>
