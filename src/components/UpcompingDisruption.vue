@@ -15,7 +15,7 @@
       />
       <img
         class="disruption-icon"
-        :src="DisruptionService.getIconForImpact(disruption.impact)"
+        :src="DisruptionService.getIconForDisruption(disruption)"
         alt="Icône de perturbation"
         v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
       />

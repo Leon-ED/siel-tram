@@ -12,9 +12,21 @@ const MAX_CHARS_DESCRIPTION = 500
 export class DisruptionService {
   private static DISRUPTION_ENDPOINT = API_URL + 'disruptions/'
 
-  public static getIconForImpact(impact: DisruptionImpact | undefined): string {
+  public static getIconForDisruption(disruption: Disruption | undefined): string {
     const BASE_ICON_PATH = '/disruptions/'
-    switch (impact) {
+    if (!disruption) {
+      return BASE_ICON_PATH + 'info_line.svg'
+    }
+    if (disruption.status === 'PLANNED') {
+      if (disruption.impact === 'SUSPENSION') {
+        return BASE_ICON_PATH + 'future_suspension.svg'
+      }
+      if (disruption.impact === 'DELAY') {
+        return BASE_ICON_PATH + 'future_delays.svg'
+      }
+    }
+
+    switch (disruption?.impact) {
       case 'SUSPENSION':
         return BASE_ICON_PATH + 'suspended.svg'
       case 'DELAY':
@@ -27,7 +39,11 @@ export class DisruptionService {
   }
 
   private static apiDisruptionToDisruption(apiDisruption: any, lines: Line[]): Disruption {
-    const line = lines.find((line) => apiDisruption.affectedLinesRefs.map((l: any) => cleanAndStripId(l)).includes(cleanAndStripId(line.id)))!
+    const line = lines.find((line) =>
+      apiDisruption.affectedLinesRefs
+        .map((l: any) => cleanAndStripId(l))
+        .includes(cleanAndStripId(line.id)),
+    )!
 
     const apiStatusToStatus = (status: string): DisruptionStatus => {
       switch (status) {
@@ -90,9 +106,11 @@ export class DisruptionService {
           if (!apiStopResponse.disruptions.length) {
             return []
           }
-          return apiStopResponse.disruptions.map((apiDisruption: any) =>
-            DisruptionService.apiDisruptionToDisruption(apiDisruption, lines),
-          ).filter((disruption: Disruption) => disruption.status === 'ACTIVE')
+          return apiStopResponse.disruptions
+            .map((apiDisruption: any) =>
+              DisruptionService.apiDisruptionToDisruption(apiDisruption, lines),
+            )
+            .filter((disruption: Disruption) => disruption.status === 'ACTIVE' || (['DELAY','SUSPENSION'].includes(disruption.impact || 'INFO')))
         })
       })
       .catch(() => {
