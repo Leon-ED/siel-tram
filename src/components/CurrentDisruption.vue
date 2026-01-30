@@ -55,10 +55,9 @@ const lineLogoSize = computed(() => {
 
 <style scoped lang="css">
 .icon-container {
-  height: 100%;
+  height: 101.5%;
   width: fit-content;
   position: relative;
-  /* Pas d'overflow hidden ici sinon on coupe l'ombre portée ou le svg si besoin */
 }
 
 svg {
