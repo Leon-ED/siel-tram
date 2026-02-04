@@ -16,7 +16,7 @@
 .message {
   font-family: 'IDFMBold', sans-serif;
   font-size: 12cqh;
-  color: white;
+  color: var(--ratp-yellow);
   text-align: center;
 }
 </style>
