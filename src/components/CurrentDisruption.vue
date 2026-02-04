@@ -89,8 +89,7 @@ svg {
 
 .line-logo {
   margin-top: -1.5cqh;
-  margin-left: 2.5cqh;
-  /* S'assure que le logo ne se déforme pas pendant l'anim */
+  margin-left: 1.5cqh;
   flex-shrink: 0;
 }
 

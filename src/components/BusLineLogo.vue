@@ -1,15 +1,15 @@
 <template>
   <svg
-    width="3016"
+    width="3500"
     height="1939"
-    viewBox="0 0 3016 1939"
+    viewBox="0 0 3500 1939"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     :style="style"
     :class="classes"
   >
     <g clip-path="url(#clip0_28_16)">
-      <rect width="3016" height="1939" :fill="bgColor" />
+      <rect width="3500" height="1939" :fill="bgColor" />
       <text
         x="50%"
         :y="wrappedLines.length > 1 ? '30%' : '50%'"
@@ -46,7 +46,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   baseFontSize: '1400',
-  style: 'RATP',
+  style: 'IDFM',
 })
 
 const style = computed(() => ({
@@ -141,6 +141,6 @@ svg.more4chars text {
 }
 svg.idfm-style {
   font-family: 'IDFMMedium' !important;
-  border-radius: 10% !important;
+  border-radius: .2em !important;
 }
 </style>
