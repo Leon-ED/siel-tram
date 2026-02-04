@@ -19,7 +19,8 @@
           />
 
           <img
-            class="disruption-icon blink"
+            class="disruption-icon"
+            :class="{'blink': disruption.status === 'ACTIVE'}"
             :src="DisruptionService.getIconForDisruption(disruption)"
             alt="Icône de perturbation"
             v-if="disruption.line.id !== 'LEONGP_FAKE_ID'"
