@@ -48,9 +48,9 @@ const lineLogoSize = computed(() => {
   }
   const smallerLogosModes = [Mode.BUS, Mode.AUTRE, Mode.NOCTILIEN]
   if (smallerLogosModes.includes(disruption.line.mode)) {
-    return '12cqh'
+    return '11cqh'
   }
-  return '18cqh'
+  return '17cqh'
 })
 </script>
 
@@ -89,12 +89,12 @@ svg {
 
 .line-logo {
   margin-top: -1.5cqh;
-  margin-left: 1.5cqh;
+  margin-left: .5cqh;
   flex-shrink: 0;
 }
 
 .disruption-icon {
-  height: 11cqh;
+  height: 10cqh;
   width: auto;
   margin-left: -2cqh;
   margin-top: 10cqh;
