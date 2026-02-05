@@ -1,8 +1,11 @@
 <template>
   <div class="no-departures-available">
-    <h2 class="message">Temps d'attente indisponibles</h2>
+    <h2 class="message">{{ message }}</h2>
   </div>
 </template>
+<script lang="ts" setup>
+defineProps<{ message: string }>()
+</script>
 <style scoped lang="css">
 .no-departures-available {
   height: 100%;

@@ -10,14 +10,14 @@
           v-else-if="viewMode === 'DESTINATIONS'"
           :departures="departuresBySettings"
         />
-        <NoDataAvailable v-else />
+        <NoDataAvailable v-else :message="noDataMessage" />
       </article>
     </section>
     <DisruptionsPanel class="traffic-info-section" :disruptions="disruptions" />
   </main>
 </template>
 <script lang="ts" setup>
-import type { Departure, Disruption, Line } from '@/types'
+import { Mode, type Departure, type Disruption, type Line } from '@/types'
 import Header from './Header.vue'
 import { computed } from 'vue'
 import TimeViewMode from './TimeViewMode.vue'
@@ -42,6 +42,21 @@ type VIEW_MODE = 'DESTINATIONS' | 'TIMES' | 'NO_DATA'
 
 const departuresBySettings = computed<Departure[]>(() => {
   return props.departures.filter((d) => props.options.branches.includes(d.branchId))
+})
+const noDataMessage = computed<string>(() => {
+  const isLineNoctilien = props.line.mode === Mode.NOCTILIEN
+  const areWeInTheDaytime = new Date().getHours() >= 5 && new Date().getHours() < 21
+  const areWeInTheEvening = new Date().getHours() >= 21 || new Date().getHours() < 5
+  if (isLineNoctilien && areWeInTheDaytime && departuresBySettings.value.length === 0) {
+    return 'service terminé'
+  }
+  if (isLineNoctilien && areWeInTheEvening && departuresBySettings.value.length === 0) {
+    return 'service non commencé'
+  }
+  if (departuresBySettings.value.length === 0) {
+    return 'Temps d\'attente indisponibles'
+  }
+  return 'Temps d\'attente indisponibles'
 })
 
 const branchesNames = computed<string[]>(() => {
