@@ -45,6 +45,10 @@ svg {
   justify-content: center;
   align-items: center;
 }
+// A améliroer
+:deep(.absolute-logo svg.idfm-style) {
+ border-radius: .2cqw !important;
+}
 
 .disruption-icon {
   height: 4cqh;

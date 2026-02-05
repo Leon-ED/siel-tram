@@ -144,4 +144,8 @@ svg.idfm-style {
   border-radius: .5cqw !important;
 
 }
+:deep(.upcoming-disruptions) svg.idfm-style {
+   border-radius: 15.5cqw !important;
+
+}
 </style>
