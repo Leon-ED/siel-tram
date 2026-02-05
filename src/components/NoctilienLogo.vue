@@ -13,7 +13,7 @@
       <rect y="1700" width="3500" height="300" :fill="bgColor" />
       <text
         fill="white"
-        :letter-spacing="-40"
+        :letter-spacing="-10"
         :font-size="getFontSize(realLineName.length)"
       >
         <tspan x="50%" y="1400">{{ realLineName }}</tspan>
@@ -62,7 +62,7 @@ svg {
 }
 svg.idfm-style {
   font-family: 'IDFMMedium' !important;
-  border-radius: .2rem !important;
+  border-radius: .5cqw !important;
 
 }
 /* align text */

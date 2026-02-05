@@ -15,7 +15,7 @@
         :y="wrappedLines.length > 1 ? '30%' : '50%'"
         text-anchor="middle"
         :fill="textColor"
-        :letter-spacing="-40"
+        :letter-spacing="-10"
         :font-size="getFontSize(props.lineName.length)"
       >
         <tspan
@@ -141,7 +141,7 @@ svg.more4chars text {
 }
 svg.idfm-style {
   font-family: 'IDFMMedium' !important;
-  border-radius: .2rem !important;
+  border-radius: .5cqw !important;
 
 }
 </style>
