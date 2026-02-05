@@ -62,7 +62,8 @@ svg {
 }
 svg.idfm-style {
   font-family: 'IDFMMedium' !important;
-  border-radius: 0.2em !important;
+  border-radius: .2rem !important;
+
 }
 /* align text */
 text {

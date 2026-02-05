@@ -141,6 +141,7 @@ svg.more4chars text {
 }
 svg.idfm-style {
   font-family: 'IDFMMedium' !important;
-  border-radius: .2em !important;
+  border-radius: .2rem !important;
+
 }
 </style>
