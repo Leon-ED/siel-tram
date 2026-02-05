@@ -1,7 +1,7 @@
 <template>
   <div class="departure-times h-w-100">
     <ol class="departure-times-list h-w-100">
-      <li v-for="(departure, index) in departures.slice(0,1)" :id="departure.id" :key="departure.id" class="departure-time-item h-w-100">
+      <li v-for="(departure, index) in departures.slice(0,2)" :id="departure.id" :key="departure.id" class="departure-time-item h-w-100">
         <SingleTime :departure="departure" :departure-order="index" />
       </li>
       <li v-if="departures.length === 1" class="departure-time-item h-w-100">
