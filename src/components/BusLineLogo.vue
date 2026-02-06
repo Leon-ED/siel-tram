@@ -63,7 +63,7 @@ const classes = computed(() => ({
 
 const getFontSize = (length: number): number => {
   if (length <= 2) {
-    return 2000
+    return 1500
   }
   if (length <= 3) {
     return 1500
