@@ -60,7 +60,10 @@
 import type { Line, Stop } from '@/types'
 import type { ScreenSettings } from './SielTramway.vue'
 import { useClipboard } from '@vueuse/core'
-const currentUrl = window.location.href
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const currentUrl = computed(() => window.location.origin + route.fullPath)
 interface Props {
   line: Line | null
   stop: Stop | null
