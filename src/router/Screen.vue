@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" id="screen">
     <FitBox :ratio="'32/9'" :position="'TOP'">
       <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" :disruptions="disruptions" />
     </FitBox>

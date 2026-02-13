@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-panel">
+  <div class="settings-panel" id="settings">
     <h3 class="title">Informations</h3>
     <div class="settings-options">
       <div class="option">
