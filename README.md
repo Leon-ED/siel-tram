@@ -68,7 +68,7 @@ En scrollant vers le bas plusieurs options sont disponibles :
 ![Options disponibles](previews/options.png)
 
 ## Exemples
-![Métro 9](previews/9.png)
+![Métro 9](previews/m9.png)
 ![Tram T3a](previews/t3a.png)
 ![RER D](previews/d.png)
 ![BUS TVM](previews/tvm.png)
