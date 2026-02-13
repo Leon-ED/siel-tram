@@ -65,7 +65,11 @@ En scrollant vers le bas plusieurs options sont disponibles :
 -- Auto: Bascule en mode destination si les prochains départs n'ont pas le même destination que le nom de la branche sinon reste en mode horaire
 - Branches à afficher : Choisit quel sens afficher Aller/Retour. Selon les arrêts et la ligne seul Aller ou seul Retour peut afficher des résultats
 
+> [!TIP]
+> Les paramètres sont automatiquements enregistrés dans l'URL, vous pouvez donc copier l'URL et la partager tout en conservant la configuration de l'écran !
+
 ![Options disponibles](previews/options.png)
+
 
 ## Exemples
 ![Métro 9](previews/m9.png)
