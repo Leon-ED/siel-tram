@@ -51,4 +51,5 @@ export interface Disruption {
 
   status: DisruptionStatus
   impact?: DisruptionImpact
+  hasSvg:boolean
 }

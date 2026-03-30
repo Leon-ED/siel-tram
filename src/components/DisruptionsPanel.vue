@@ -1,12 +1,8 @@
 <template>
-<div class="disruptions-panel h-w-100">
+  <div class="disruptions-panel h-w-100">
     <div class="disruptions-icons h-w-100">
       <CurrentDisruption :disruption="activeDisruption" class="active-disruption-icon" />
-      <TransitionGroup 
-        name="list" 
-        tag="div" 
-        class="upcoming-disruptions"
-      >
+      <TransitionGroup name="list" tag="div" class="upcoming-disruptions">
         <UpcompingDisruption
           class="upcoming-disruption"
           v-for="disruption in upcomingDisruptions"
@@ -20,15 +16,25 @@
     <div class="active-disruption-message">
       <Transition name="slide-horizontal">
         <div
+          v-if="disruptionSvgSrc === null"
+          :key="'text-' + activeDisruption.id"
           class="message"
           :class="messageLengthClass"
           v-html="activeDisruption.description"
-          :key="activeDisruption.id"
         />
+
+        <div v-else :key="'svg-' + activeDisruption.id" class="image-container">
+          <img
+            :src="disruptionSvgSrc"
+            :alt="activeDisruption.title + ' - ' + activeDisruption.description"
+            class="disruption-svg"
+          />
+        </div>
       </Transition>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import Clock from './Clock.vue'
@@ -37,10 +43,13 @@ import { getStringRealLength } from '@/utils'
 import { Mode, type Disruption, type Line } from '@/types'
 import { useIntervalFn } from '@vueuse/core'
 import UpcompingDisruption from './UpcompingDisruption.vue'
+
 interface Props {
   disruptions: Disruption[]
 }
+
 const props = defineProps<Props>()
+
 const DEFAULT_DISUPTION_LINE: Line = {
   id: 'LEONGP_FAKE_ID',
   name: 'Toutes les lignes',
@@ -48,6 +57,7 @@ const DEFAULT_DISUPTION_LINE: Line = {
   textColor: '#FFFFFF',
   mode: Mode.AUTRE,
 }
+
 const DEFAULT_DISRUPTION: Disruption = {
   id: 'default',
   title: 'Vigilence',
@@ -55,35 +65,53 @@ const DEFAULT_DISRUPTION: Disruption = {
     'Attentifs, ensemble • <strong>Signaler à nos agents tout objet abandonné ou situation inhabituelle</strong>',
   status: 'ACTIVE',
   impact: 'INFO',
+  hasSvg: false,
   line: DEFAULT_DISUPTION_LINE,
 }
-;('')
+
 const DISRUPTION_SHOW_DURATION_SECONDS = 15
-
 const activeIndex = ref(0)
-const activeDisruption = computed<Disruption>(() => {
-  const disruptions = props.disruptions
 
-  if (!disruptions || disruptions.length === 0) {
-    return DEFAULT_DISRUPTION
-  }
-  return disruptions[activeIndex.value] ?? DEFAULT_DISRUPTION
+const activeDisruption = computed<Disruption>(() => {
+  return uniqueDisruptions.value[activeIndex.value] ?? DEFAULT_DISRUPTION
 })
+const uniqueDisruptions = computed<Disruption[]>(() => {
+  const list = props.disruptions || []
+  if (list.length === 0) return [DEFAULT_DISRUPTION]
+
+  const seenGenericLines = new Set<string>()
+
+  return list.filter((disruption) => {
+    const displaysGeneric =
+      disruption.description.toLowerCase().includes('travaux') &&
+      getStringRealLength(disruption.description) >= 120
+
+    if (displaysGeneric) {
+      const lineId = disruption.line.id
+      if (seenGenericLines.has(lineId)) {
+        return false
+      }
+      seenGenericLines.add(lineId)
+    }
+
+    return true
+  })
+})
+
 const { pause, resume } = useIntervalFn(
   () => {
-    if (!props.disruptions || props.disruptions.length <= 1) return
-
-    activeIndex.value = (activeIndex.value + 1) % props.disruptions.length
+    if (uniqueDisruptions.value.length <= 1) return
+    activeIndex.value = (activeIndex.value + 1) % uniqueDisruptions.value.length
   },
   DISRUPTION_SHOW_DURATION_SECONDS * 1000,
   { immediateCallback: false, immediate: true },
 )
-watch(
-  () => props.disruptions,
-  (newDisruptions) => {
-    activeIndex.value = 0
 
-    if (!newDisruptions || newDisruptions.length <= 1) {
+watch(
+  uniqueDisruptions,
+  (newList) => {
+    activeIndex.value = 0
+    if (newList.length <= 1) {
       pause()
     } else {
       resume()
@@ -94,27 +122,40 @@ watch(
 
 const messageLengthClass = computed(() => {
   const length = getStringRealLength(activeDisruption.value.description)
-  if (length > 430) {
-    return 'too-long-message'
-  }
-  if (length > 270) {
-    return 'very-very-long-message'
-  }
-  if (length > 200) {
-    return 'very-long-message'
-  }
-  if (length > 120) {
-    return 'long-message'
-  }
+  if (length > 270) return 'very-very-long-message'
+  if (length > 200) return 'very-long-message'
+  if (length > 120) return 'long-message'
   return ''
 })
-const upcomingDisruptions = computed(() => {
-  const list = props.disruptions || []
-  // on prend les prochaines 5 après l’active
-  return list.slice(activeIndex.value + 1, activeIndex.value + 6)
+const shouldDisplayGenericWorksMessage = computed(() => {
+  return (
+    activeDisruption.value.description.toLowerCase().includes('travaux') &&
+    getStringRealLength(activeDisruption.value.description) >= 120
+  )
+})
+const disruptionSvgSrc = computed(() => {
+  if (!activeDisruption.value.hasSvg && !shouldDisplayGenericWorksMessage.value) {
+    return null
+  }
+  if (activeDisruption.value.hasSvg) {
+    return `/disruptions/models/${activeDisruption.value.id}.svg`
+  }
+  if (shouldDisplayGenericWorksMessage.value) {
+    if (activeDisruption.value.status === 'ACTIVE') {
+      return '/disruptions/models/ongoingworks.svg'
+    }
+    if (activeDisruption.value.status === 'PLANNED') {
+      return '/disruptions/models/upcomingworks.svg'
+    }
+  }
+  return null
 })
 
+const upcomingDisruptions = computed(() => {
+  return uniqueDisruptions.value.slice(activeIndex.value + 1, activeIndex.value + 6)
+})
 </script>
+
 <style scoped lang="css">
 .disruptions-panel {
   display: grid;
@@ -122,6 +163,7 @@ const upcomingDisruptions = computed(() => {
   grid-template-columns: 100%;
   border-radius: 2cqh;
 }
+
 .disruptions-icons {
   overflow: hidden;
   position: relative;
@@ -132,17 +174,17 @@ const upcomingDisruptions = computed(() => {
   grid-template-rows: 100%;
   grid-template-columns: 23% 77%;
 }
+
 .upcoming-disruptions {
   height: 100%;
   width: 100%;
   margin-top: 2cqh;
   display: grid;
-  grid-template-columns: repeat(5,12%);
+  grid-template-columns: repeat(5, 12%);
   align-items: center;
   gap: 2cqh;
-
-
 }
+
 .upcoming-disruption {
   aspect-ratio: 1;
   height: 55%;
@@ -164,31 +206,47 @@ const upcomingDisruptions = computed(() => {
   justify-content: center;
   align-items: center;
 }
+
 :deep(strong) {
   font-family: 'IDFMMedium', sans-serif !important;
   font-weight: normal;
 }
+
 .active-disruption-message {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 11.5cqh;
   letter-spacing: 1;
 }
+
+.message,
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
 .message {
   font-family: 'IDFMRegular', sans-serif;
   padding: 3.5cqh 4cqh;
   color: #221f21;
-  position: absolute; /* Il reste toujours en absolute, plus de saut */
-  top: 0;
-  left: 0;
-  width: 98%;
-  height: 98%;
-  box-sizing: border-box;
+}
+
+.disruption-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .long-message {
   font-size: 0.85em;
 }
 .very-long-message {
-  font-size: 0.75em;
+  font-size: 0.775em;
 }
 .very-very-long-message {
   font-size: 0.6em;
@@ -196,7 +254,8 @@ const upcomingDisruptions = computed(() => {
 .too-long-message {
   font-size: 0.45em;
 }
-.active-disruption-icon{
+
+.active-disruption-icon {
   z-index: 1;
 }
 
@@ -226,23 +285,17 @@ const upcomingDisruptions = computed(() => {
   transform: translateX(-90%);
   opacity: 0;
 }
-.active-disruption-message {
-  position: relative;
-  overflow: hidden;
-}
-
 
 .list-move,
 .list-enter-active,
 .list-leave-active {
-  transition: all 1s ease; 
+  transition: all 1s ease;
 }
 
 .list-leave-active {
   position: absolute;
-  top: 31.5%; 
-  background-color: red;
-  transform: translateX(-300px); 
+  top: 31.5%;
+  transform: translateX(-300px);
 }
 
 .list-enter-from {
