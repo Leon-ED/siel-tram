@@ -73,7 +73,7 @@ En scrollant vers le bas plusieurs options sont disponibles :
 
 ## Exemples
 ![Métro 9](previews/m9.png)
-![Tram T3a](previews/t3a.png)
+![Tram T3b](previews/t3b.png)
 ![RER D](previews/d.png)
 ![BUS TVM](previews/tvm.png)
 ![BUS 310](previews/310.png)
