@@ -14,7 +14,7 @@
     </div>
     <div class="departure-time-before-arrival">
       <div class="time-info" v-if="showMinutes">
-        <AnimatedNumber :time="Math.round(secondsBeforeArrival / 60).toString()" class="minutes" />
+        <AnimatedNumber :time="Math.round(Math.max(secondsBeforeArrival, 0) / 60).toString()" class="minutes" />
         <span class="unit">min</span>
       </div>
     </div>
