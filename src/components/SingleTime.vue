@@ -39,7 +39,7 @@ interface Props {
   departureOrder: number
   baseFontSize?: string
 }
-const NEGATIVE_THRESHOLD_SECONDS = -30
+const NEGATIVE_THRESHOLD_SECONDS = -60
 
 const props = defineProps<Props>()
 const { departure, departureOrder, baseFontSize } = toRefs(props)
