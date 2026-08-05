@@ -182,6 +182,7 @@ export const cleanStopName = (name: string, isHeader: boolean = true): string =>
 
   const replace = new Map<string, string>([
     [' - ', '–'],
+    ['–TRAMWAY',''],
     ['Noisy le Sec', 'Noisy-le-Sec'],
     ['Porte ', 'P<sup>te</sup> '],
     ['Villiers-sur-Marne – Le Plessis-Trévise', 'Villiers-sur-Marne'],
