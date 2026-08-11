@@ -5,7 +5,7 @@
         <Header :line="line" :branchesNames="branchesNames" :viewMode="viewMode" />
       </header>
       <article class="departures" :data-view-mode="viewMode">
-        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departuresBySettings" />
+        <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departuresBySettings" :hidePlatform="options.hidePlatform" />
         <DestinationViewMode
           v-else-if="viewMode === 'DESTINATIONS'"
           :departures="departuresBySettings"
@@ -29,6 +29,7 @@ export interface ScreenSettings {
   invertedColumns: boolean
   mode: 'DESTINATIONS' | 'TIMES' | 'AUTO'
   branches: string[]
+  hidePlatform?: boolean
 }
 
 interface Props {

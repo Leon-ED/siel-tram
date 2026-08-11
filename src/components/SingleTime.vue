@@ -5,16 +5,26 @@
     :style="{ '--base-font-size': baseFontSize || '5cqh' }"
   >
     <div class="vehicle-order">
-      {{ departureOrder + 1
-      }}<sup>
-        <template v-if="departureOrder === 0">er</template>
-        <template v-else>e</template>
-      </sup>
-      tram
+      <div>
+        {{ departureOrder + 1
+        }}<sup>
+          <template v-if="departureOrder === 0">er</template>
+          <template v-else>e</template>
+        </sup>
+        tram
+      </div>
+      <div class="platform" v-if="!hidePlatform">
+        <span class="platform-label">quai</span>
+        <span class="platform-number">{{ departure.platform }}</span>
+      </div>
     </div>
+
     <div class="departure-time-before-arrival">
       <div class="time-info" v-if="showMinutes">
-        <AnimatedNumber :time="Math.round(Math.max(secondsBeforeArrival, 0) / 60).toString()" class="minutes" />
+        <AnimatedNumber
+          :time="Math.round(Math.max(secondsBeforeArrival, 0) / 60).toString()"
+          class="minutes"
+        />
         <span class="unit">min</span>
       </div>
     </div>
@@ -23,7 +33,6 @@
     </div>
     <Chenillard class="time-is-unreliable" size="1.5em" v-if="isTimeNotReliable" />
     <span class="bar" v-if="departureOrder === 1"></span>
-
   </div>
 </template>
 <script setup lang="ts">
@@ -38,11 +47,12 @@ interface Props {
   departure: Departure
   departureOrder: number
   baseFontSize?: string
+  hidePlatform?: boolean
 }
 const NEGATIVE_THRESHOLD_SECONDS = -60
 
 const props = defineProps<Props>()
-const { departure, departureOrder, baseFontSize } = toRefs(props)
+const { departure, departureOrder, baseFontSize, hidePlatform } = toRefs(props)
 
 const now = useNow({ interval: 4_000 })
 
@@ -76,7 +86,37 @@ const showMinutes = computed<boolean>(() => {
   margin-top: 3cqh;
   top: 3cqh;
   color: white;
+  display: flex;
+  justify-content: space-between;
   font-size: 1.5em;
+}
+.platform {
+  font-family: 'IDFMBold', sans-serif;
+  border: 0.7cqh solid white;
+  border-radius: 1.5cqh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 13cqh;
+  margin-right: 2.5cqh;
+  aspect-ratio: 1/1;
+}
+.departure[data-index='0'] .platform {
+  margin-right: 5cqh;
+}
+
+.platform-label {
+  font-size: 0.5em;
+  margin-top: 0.1em;
+  letter-spacing: 0.1em;
+  justify-self: center;
+  align-self: center;
+}
+.platform-number {
+  font-size: 1.2em;
+  margin-top: 0.05em;
+  justify-self: center;
+  align-self: center;
 }
 .departure-time-before-arrival {
   top: 30%;
@@ -92,11 +132,9 @@ const showMinutes = computed<boolean>(() => {
   box-sizing: border-box;
   padding-right: 4cqh;
   height: 100%;
-  display: grid;
+  display: flex;
   margin-left: 20%;
-  grid-template-columns: 70% 30%;
-  grid-template-rows: 100%;
-  justify-items: center;
+  justify-content: center;
   align-items: baseline;
 }
 sup {
@@ -116,7 +154,7 @@ sup {
 }
 .at-platform-text {
   font-family: 'IDFMBold', sans-serif;
-  color : var(--ratp-yellow);
+  color: var(--ratp-yellow);
   font-size: 4em;
   display: grid;
   justify-items: center;
@@ -162,7 +200,7 @@ sup {
   }
   .bar {
     right: auto;
-    top:0;
+    top: 0;
     bottom: 100%;
     left: var(--offset);
     height: 2%;

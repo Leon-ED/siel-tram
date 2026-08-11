@@ -110,6 +110,7 @@ const screenOptions = reactive<ScreenSettings>({
     | 'DESTINATIONS'
     | 'TIMES'
     | 'AUTO',
+  hidePlatform: getSingleValueFromQueryParam(route.query.hidePlatform, 'boolean', false),
 })
 watch(
   screenOptions,

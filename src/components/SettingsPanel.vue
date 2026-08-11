@@ -38,6 +38,10 @@
         <input name="invert-columns" type="checkbox" v-model="screenOptions.invertedColumns" />
       </div>
       <div class="option-checkbox">
+        <label for="hide-platform">Masquer les numéros de quai</label>
+        <input name="hide-platform" type="checkbox" v-model="screenOptions.hidePlatform" />
+      </div>
+      <div class="option-checkbox">
         <label for="mode">Mode d'affichage</label>
         <select name="mode" v-model="screenOptions.mode">
           <option value="AUTO">Automatique</option>

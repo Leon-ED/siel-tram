@@ -2,10 +2,10 @@
   <div class="departure-times h-w-100">
     <ol class="departure-times-list h-w-100">
       <li v-for="(departure, index) in departures.slice(0,2)" :id="departure.id" :key="departure.id" class="departure-time-item h-w-100">
-        <SingleTime :departure="departure" :departure-order="index" />
+        <SingleTime :departure="departure" :departure-order="index" :hidePlatform="hidePlatform" />
       </li>
       <li v-if="departures.length === 1" class="departure-time-item h-w-100">
-        <SingleTime :departure="FAKE_DEPARTURE" :departure-order="1" />
+        <SingleTime :departure="FAKE_DEPARTURE" :departure-order="1" :hidePlatform="hidePlatform" />
       </li>
     </ol>
   </div>
@@ -15,7 +15,8 @@ import type { Departure } from '@/types'
 import SingleTime from './SingleTime.vue'
 
 interface Props {
-  departures: Departure[]
+  departures: Departure[],
+  hidePlatform?: boolean
 }
 const FAKE_DEPARTURE: Departure = {
   id: 'fake',
