@@ -13,7 +13,7 @@
         </sup>
         tram
       </div>
-      <div class="platform" v-if="!hidePlatform">
+      <div class="platform" v-if="!hidePlatform && departure.platform">
         <span class="platform-label">quai</span>
         <span class="platform-number">{{ departure.platform }}</span>
       </div>
