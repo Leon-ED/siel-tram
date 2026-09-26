@@ -7,15 +7,15 @@ export interface Line {
 }
 
 export enum Mode {
-  RER,
-  TRANSILIEN,
-  TER,
-  METRO,
-  TRAM,
-  CABLE,
-  BUS,
-  NOCTILIEN,
-  AUTRE,
+  RER = "RER",
+  TRANSILIEN = "TRANSILIEN",
+  TER = "TER",
+  METRO = "METRO",
+  TRAM = "TRAM",
+  CABLE = "CABLE",
+  BUS = "BUS",
+  NOCTILIEN = "NOCTILIEN",
+  AUTRE = "AUTRE",
 }
 
 export interface Stop {

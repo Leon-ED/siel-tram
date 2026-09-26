@@ -1,9 +1,14 @@
 <template>
-  <div class="header" :class="{['view-mode-'+viewMode.toLowerCase()]: true }">
+  <div class="header" :class="{ ['view-mode-' + viewMode.toLowerCase()]: true }">
+    <img v-if="showModeLogo" :src="modeLogoUrl" class="mode-logo" />
     <LineLogo :line="line" :size="lineLogoSize" class-name="logo" />
     <div class="directions">
-      <h1 class="direction" :class="directionLenghtClass" v-if="branchesNames.length > 0" v-html="branchesNames.join(' • ')"
-      </h1>
+      <h1
+        class="direction"
+        :class="directionLenghtClass"
+        v-if="branchesNames.length > 0"
+        v-html="branchesNames.join(' • ')"
+      ></h1>
     </div>
   </div>
 </template>
@@ -16,8 +21,13 @@ interface Props {
   line: Line
   branchesNames: string[]
   viewMode: string
+  showModeLogo: boolean
 }
 const props = defineProps<Props>()
+
+const modeLogoUrl = computed(() => {
+  return '/modes/' + props.line.mode.toLowerCase() + '.svg'
+})
 
 const directionLenghtClass = computed(() => {
   const length = getStringRealLength(props.branchesNames.join(' • '))
@@ -54,7 +64,7 @@ const lineLogoSize = computed(() => {
   align-items: center;
   gap: 4cqh;
 }
-.view-mode-destinations{
+.view-mode-destinations {
   border-bottom-left-radius: 0;
 }
 .directions {
@@ -63,6 +73,10 @@ const lineLogoSize = computed(() => {
   overflow: hidden;
   align-self: center;
   max-height: 100%;
+}
+.mode-logo {
+  width: 21cqh;
+  height: 21cqh;
 }
 
 .direction {
@@ -79,7 +93,7 @@ const lineLogoSize = computed(() => {
   line-clamp: 2;
   overflow: hidden;
 }
-.replacement-line{
+.replacement-line {
   height: 12cqh;
 }
 .long-direction {

@@ -1,7 +1,13 @@
 <template>
   <div class="content" id="screen">
     <FitBox :ratio="'32/9'" :position="'TOP'">
-      <SielTramway v-if="line" :line="line" :departures="departures" :options="screenOptions" :disruptions="disruptions" />
+      <SielTramway
+        v-if="line"
+        :line="line"
+        :departures="departures"
+        :options="screenOptions"
+        :disruptions="disruptions"
+      />
     </FitBox>
   </div>
   <SettingsPanel
@@ -35,24 +41,24 @@ const APP_FORCE_RELOAD_DELAY_HOURS = 6
  */
 const LAST_DEPARTURES_UPDATE = ref<Date | null>(null)
 const LAST_DISRUPTIONS_UPDATE = ref<Date | null>(null)
-const visibility = useDocumentVisibility();
+const visibility = useDocumentVisibility()
 
 watch(visibility, (newVisibility) => {
-  console.info('Visibility changed to', newVisibility);
+  console.info('Visibility changed to', newVisibility)
   if (newVisibility !== 'visible') {
-    return;
+    return
   }
   // Si la date de la dernière mise à jour des départs est nulle ou trop ancienne, on force une mise à jour
-  const now = new Date();
+  const now = new Date()
   if (
     !LAST_DEPARTURES_UPDATE.value ||
     (now.getTime() - LAST_DEPARTURES_UPDATE.value.getTime()) / 1000 >
       FETCH_DEPARTURES_INTERVAL_SECONDS
   ) {
-    LAST_DEPARTURES_UPDATE.value = now;
+    LAST_DEPARTURES_UPDATE.value = now
     DepartureService.getDepartures(stopId!, lineId!, departures.value).then((fetchedDepartures) => {
-      departures.value = fetchedDepartures;
-    });
+      departures.value = fetchedDepartures
+    })
   }
   // Si la date de la dernière mise à jour des perturbations est nulle ou trop ancienne, on force une mise à jour
   if (
@@ -60,11 +66,11 @@ watch(visibility, (newVisibility) => {
     (now.getTime() - LAST_DISRUPTIONS_UPDATE.value.getTime()) / 1000 >
       FETCH_DISRUPTIONS_INTERVAL_SECONDS
   ) {
-    LAST_DISRUPTIONS_UPDATE.value = now;
+    LAST_DISRUPTIONS_UPDATE.value = now
     if (line.value) {
       DisruptionService.getDisruptions([line.value]).then((_disruptions) => {
-        disruptions.value = _disruptions;
-      });
+        disruptions.value = _disruptions
+      })
     }
   }
 })
@@ -99,6 +105,7 @@ const branchesAvailable = computed<string[]>(() => {
 
 const screenOptions = reactive<ScreenSettings>({
   invertedColumns: getSingleValueFromQueryParam(route.query.invertColumns, 'boolean', false),
+  showModeLogo: getSingleValueFromQueryParam(route.query.showModeLogo, 'boolean', true),
   branches: (() => {
     const urlBranches = queryParamToArray(route.query.branches)
     if (urlBranches.length === 0) {
@@ -148,7 +155,7 @@ useIntervalFn(() => {
   }
   DisruptionService.getDisruptions([line.value]).then((_disruptions) => {
     disruptions.value = _disruptions
-    LAST_DISRUPTIONS_UPDATE.value = new Date();
+    LAST_DISRUPTIONS_UPDATE.value = new Date()
   })
 }, FETCH_DISRUPTIONS_INTERVAL_SECONDS * 1_000)
 /**
@@ -160,7 +167,7 @@ useIntervalFn(() => {
   }
   DepartureService.getDepartures(stopId!, lineId!, departures.value).then((fetchedDepartures) => {
     departures.value = fetchedDepartures
-    LAST_DEPARTURES_UPDATE.value = new Date();
+    LAST_DEPARTURES_UPDATE.value = new Date()
   })
 }, FETCH_DEPARTURES_INTERVAL_SECONDS * 1_000)
 

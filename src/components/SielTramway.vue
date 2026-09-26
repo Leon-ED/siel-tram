@@ -2,7 +2,7 @@
   <main class="screen" :class="{ 'inverted-column': options.invertedColumns }">
     <section class="departures-section">
       <header class="departures-header">
-        <Header :line="line" :branchesNames="branchesNames" :viewMode="viewMode" />
+        <Header :line="line" :branchesNames="branchesNames" :viewMode="viewMode" :show-mode-logo="options.showModeLogo" />
       </header>
       <article class="departures" :data-view-mode="viewMode">
         <TimeViewMode v-if="viewMode === 'TIMES'" :departures="departuresBySettings" :hidePlatform="options.hidePlatform" />
@@ -29,6 +29,7 @@ export interface ScreenSettings {
   invertedColumns: boolean
   mode: 'DESTINATIONS' | 'TIMES' | 'AUTO'
   branches: string[]
+  showModeLogo: boolean
   hidePlatform?: boolean
 }
 

@@ -17,6 +17,7 @@ export class LineService {
       case 'TRAM':
         return Mode.TRAM
       case 'CABLE':
+      case 'TELEPHERIQUE':
         return Mode.CABLE
       case 'BUS':
         return Mode.BUS

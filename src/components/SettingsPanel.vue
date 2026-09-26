@@ -42,6 +42,10 @@
         <input name="hide-platform" type="checkbox" v-model="screenOptions.hidePlatform" />
       </div>
       <div class="option-checkbox">
+        <label for="show-mode-logo">Afficher le logo du mode de transport</label>
+        <input name="show-mode-logo" type="checkbox" v-model="screenOptions.showModeLogo" />
+      </div>
+      <div class="option-checkbox">
         <label for="mode">Mode d'affichage</label>
         <select name="mode" v-model="screenOptions.mode">
           <option value="AUTO">Automatique</option>
